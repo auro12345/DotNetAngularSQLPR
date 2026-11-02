@@ -1,0 +1,84 @@
+<div class="page">
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">INVENTORY WORKSPACE</p>
+      <h1>Product Management</h1>
+      <p class="subtitle">Manage your products in one place.</p>
+    </div>
+    <span class="api-status">● .NET API</span>
+  </header>
+
+  <main>
+    <section class="stats">
+      <div class="stat-card"><span>Total products</span><strong>{{ products.length }}</strong></div>
+      <div class="stat-card"><span>Total inventory value</span><strong>{{ productsTotal() | currency:'INR':'symbol':'1.0-2' }}</strong></div>
+    </section>
+
+    <section class="panel">
+      <div class="section-heading">
+        <div>
+          <h2>{{ editingId === null ? 'Add a product' : 'Edit product' }}</h2>
+          <p>Enter the product details below.</p>
+        </div>
+        @if (editingId !== null) {
+          <button type="button" class="button secondary" (click)="cancelEdit()">Cancel editing</button>
+        }
+      </div>
+
+      <form #productForm="ngForm" (ngSubmit)="saveProduct()">
+        <div class="form-grid">
+          <label>Product name
+            <input name="name" [(ngModel)]="form.name" required maxlength="100" placeholder="e.g. Laptop" />
+          </label>
+          <label>Category
+            <input name="category" [(ngModel)]="form.category" required maxlength="50" placeholder="e.g. Electronics" />
+          </label>
+          <label>Price (₹)
+            <input name="price" type="number" [(ngModel)]="form.price" required min="0.01" step="0.01" />
+          </label>
+          <label>Description
+            <input name="description" [(ngModel)]="form.description" maxlength="500" placeholder="Short product description" />
+          </label>
+        </div>
+        <div class="form-actions">
+          <button class="button primary" type="submit" [disabled]="productForm.invalid || saving">{{ saving ? 'Saving...' : editingId === null ? 'Add product' : 'Save changes' }}</button>
+        </div>
+      </form>
+
+      @if (errorMessage) { <p class="message error">{{ errorMessage }}</p> }
+      @if (successMessage) { <p class="message success">{{ successMessage }}</p> }
+    </section>
+
+    <section class="panel">
+      <div class="section-heading">
+        <div><h2>Products</h2><p>Products currently stored by the API.</p></div>
+        <button class="button secondary" (click)="loadProducts()" [disabled]="loading">{{ loading ? 'Loading...' : 'Refresh' }}</button>
+      </div>
+
+      @if (loading) {
+        <p class="empty-state">Loading products...</p>
+      } @else if (products.length === 0) {
+        <p class="empty-state">No products found. Add your first product above.</p>
+      } @else {
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Product</th><th>Category</th><th>Price</th><th>Description</th><th>Action</th></tr></thead>
+            <tbody>
+              @for (product of products; track product.id) {
+                <tr>
+                  <td><div class="product-name">{{ product.name }}</div><span class="product-id">ID: {{ product.id }}</span></td>
+                  <td><span class="category">{{ product.category }}</span></td>
+                  <td class="price">{{ product.price | currency:'INR':'symbol':'1.0-2' }}</td>
+                  <td>{{ product.description || '—' }}</td>
+                  <td><button class="button edit" (click)="editProduct(product)">Edit</button></td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </section>
+  </main>
+
+  <footer>Product Management · Angular 22 + ASP.NET Core 8</footer>
+</div>
