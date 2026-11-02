@@ -89,6 +89,19 @@ namespace ProductManagement.Infrastructure.Repositories
             return true;
         }
 
+        /// <summary>
+        /// Deletes an existing product from the in-memory collection.
+        /// </summary>
+        /// <param name="id">The product identifier.</param>
+        /// <returns><see langword="true"/> if deleted; otherwise, <see langword="false"/>.</returns>
+        public bool Delete(int id)
+        {
+            var product = _products.FirstOrDefault(p => p.Id == id);
+            if (product is null) return false;
+
+            return _products.Remove(product);
+        }
+
         #endregion
     }
     #endregion

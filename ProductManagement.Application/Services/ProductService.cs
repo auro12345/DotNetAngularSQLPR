@@ -108,6 +108,16 @@ namespace ProductManagement.Application.Services
             return updated ? MapToDto(product) : null;
         }
 
+        /// <summary>
+        /// Deletes a product using its unique identifier.
+        /// </summary>
+        /// <param name="id">The unique identifier of the product.</param>
+        /// <returns><see langword="true"/> if the product was deleted; otherwise, <see langword="false"/>.</returns>
+        public bool Delete(int id)
+        {
+            return _productRepository.Delete(id);
+        }
+
         #endregion
 
         #region Private Method(s)

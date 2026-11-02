@@ -70,7 +70,7 @@
                   <td><span class="category">{{ product.category }}</span></td>
                   <td class="price">{{ product.price | currency:'INR':'symbol':'1.0-2' }}</td>
                   <td>{{ product.description || '—' }}</td>
-                  <td><button class="button edit" (click)="editProduct(product)">Edit</button></td>
+                  <td class="actions"><button type="button" class="button edit" (click)="editProduct(product)">Edit</button><button type="button" class="button delete" (click)="deleteProduct(product)" [disabled]="isDeleting(product.id)" [attr.aria-label]="'Delete ' + product.name + ' with ID ' + product.id">{{ isDeleting(product.id) ? 'Deleting...' : 'Delete' }}</button></td>
                 </tr>
               }
             </tbody>
