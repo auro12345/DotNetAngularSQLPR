@@ -25,6 +25,8 @@ input:focus { border-color: #6478e8; box-shadow: 0 0 0 3px #6478e81c; }
 .primary { background: #5368db; color: white; }
 .secondary { background: #eef1f7; color: #35415b; }
 .edit { background: #edf0ff; color: #4559c5; }
+.actions { display: flex; gap: 8px; white-space: nowrap; }
+.delete { background: #fff0f0; color: #b42318; }
 .table-wrap { width: 100%; overflow-x: auto; }
 table { border-collapse: collapse; width: 100%; text-align: left; font-size: 14px; }
 th { background: #f8f9fc; color: #788397; font-size: 11px; text-transform: uppercase; letter-spacing: .7px; }

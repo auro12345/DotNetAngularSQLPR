@@ -90,6 +90,20 @@ namespace ProductManagement.Infrastructure.Repositories
             return _context.SaveChanges() > 0;
         }
 
+        /// <summary>
+        /// Deletes an existing product from the database.
+        /// </summary>
+        /// <param name="id">The product identifier.</param>
+        /// <returns>True if the product was deleted; otherwise, false.</returns>
+        public bool Delete(int id)
+        {
+            var product = _context.Products.FirstOrDefault(p => p.Id == id);
+            if (product is null) return false;
+
+            _context.Products.Remove(product);
+            return _context.SaveChanges() > 0;
+        }
+
         #endregion
     }
 }

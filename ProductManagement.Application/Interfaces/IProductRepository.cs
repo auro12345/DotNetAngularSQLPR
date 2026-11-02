@@ -61,6 +61,13 @@ namespace ProductManagement.Application.Interfaces
         /// <returns><see langword="true"/> if the product was updated; otherwise, <see langword="false"/>.</returns>
         bool Update(Product product);
 
+        /// <summary>
+        /// Deletes a product by its unique identifier.
+        /// </summary>
+        /// <param name="id">The unique identifier of the product.</param>
+        /// <returns><see langword="true"/> if the product was deleted; otherwise, <see langword="false"/>.</returns>
+        bool Delete(int id);
+
         #endregion
     }
     #endregion

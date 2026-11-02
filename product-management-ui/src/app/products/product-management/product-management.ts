@@ -20,6 +20,7 @@ export class ProductManagement implements OnInit {
   editingId: number | null = null;
   loading = false;
   saving = false;
+  deletingIds = new Set<number>();
   errorMessage = '';
   successMessage = '';
 
@@ -75,6 +76,37 @@ export class ProductManagement implements OnInit {
   }
 
   cancelEdit(): void { this.editingId = null; this.form = this.emptyForm(); }
+
+  deleteProduct(product: Product): void {
+    if (this.deletingIds.has(product.id)) return;
+    if (!window.confirm(`Delete "${product.name}" (ID: ${product.id})?`)) return;
+
+    this.deletingIds.add(product.id);
+    this.errorMessage = '';
+    this.successMessage = '';
+
+    this.productService.delete(product.id).subscribe({
+      next: () => {
+        this.deletingIds.delete(product.id);
+        this.successMessage = `Product "${product.name}" deleted successfully.`;
+        this.loadProducts();
+        this.cdr.detectChanges();
+      },
+      error: error => {
+        this.deletingIds.delete(product.id);
+        const status = error?.status;
+        if (status === 404) {
+          this.errorMessage = 'The product no longer exists. Refreshing the list.';
+          this.loadProducts();
+        } else {
+          this.errorMessage = 'Could not delete the product. Please try again.';
+        }
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  isDeleting(productId: number): boolean { return this.deletingIds.has(productId); }
 
   productsTotal(): number { return this.products.reduce((total, product) => total + product.price, 0); }
 
