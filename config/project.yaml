@@ -1,0 +1,176 @@
+version: "1.0"
+
+detectedAt: "2026-11-02T00:00:00Z"
+
+project:
+  name: "Product Management"
+  description: "A product management application with an ASP.NET Core REST API and Angular client for managing products."
+  domain: "internal-tooling"
+  team: "Product Management"
+  owner: "Aurobinda Tripathy"
+  status: active
+  detectedAt: "2026-11-02T00:00:00Z"
+
+tech:
+  primaryLanguage: C#
+  languageVersion: "12"
+  runtimeVersion: ".NET 8"
+  framework: ASP.NET Core
+  frameworkVersion: "8.0"
+  frameworkVariant: REST API
+  packageManager: NuGet
+  packageManagerVersion: unknown
+  testFramework: none
+  e2eFramework: none
+  linter: none
+  linterConfig: unknown
+  formatter: dotnet format
+  formatterConfig: none
+  typeChecker: "C# compiler"
+  styling: plain CSS
+  stateManagement: Angular services
+  apiStyle: REST
+  databases:
+    - SQL Server
+  orm: Entity Framework Core
+  ciCd: unknown
+  containerization: none
+  deployTarget: unknown
+  repositoryType: single
+  monorepoTool: none
+  additionalLanguages:
+    - TypeScript
+    - HTML
+    - CSS
+
+commands:
+  install: "dotnet restore ProductManagement.sln"
+  dev: "dotnet run --project ProductManagement.API && npm start --prefix product-management-ui"
+  build: "dotnet build ProductManagement.sln && npm run build --prefix product-management-ui"
+  start: "dotnet run --project ProductManagement.API"
+  test: "dotnet test ProductManagement.sln"
+  testWatch: "dotnet watch test ProductManagement.sln"
+  testCoverage: 'dotnet test ProductManagement.sln --collect:"XPlat Code Coverage"'
+  lint: "dotnet format ProductManagement.sln --verify-no-changes"
+  lintFix: "dotnet format ProductManagement.sln"
+  format: "dotnet format ProductManagement.sln --verify-no-changes && npx prettier --check --prefix product-management-ui"
+  formatFix: "dotnet format ProductManagement.sln && npm exec --prefix product-management-ui prettier -- --write src/**/*.{ts,html,css}"
+  typecheck: "dotnet build ProductManagement.sln && npx tsc -p product-management-ui/tsconfig.app.json --noEmit"
+  audit: "dotnet list ProductManagement.sln package --vulnerable && npm audit --prefix product-management-ui --audit-level=moderate"
+  migrate: "dotnet ef database update --project ProductManagement.Infrastructure --startup-project ProductManagement.API"
+  clean: "dotnet clean ProductManagement.sln && npm run build --prefix product-management-ui"
+
+codingStandards:
+  maxFunctionLines: 10
+  maxCyclomaticComplexity: 8
+  maxFileLines: 300
+  maxClassMethods: 10
+
+  conventions:
+    componentStyle: class
+    importStyle: named
+    namingConvention: PascalCase
+    fileNaming: PascalCase
+    testStyle: separate-folder
+    organizationPattern: layerBased
+
+  patterns:
+    - "Clean/Layered Architecture with Domain, Application, Infrastructure, and API projects"
+    - "Repository pattern for data access through interfaces"
+    - "Dependency injection for application and infrastructure services"
+    - "DTOs for API request and response shapes"
+    - "Entity Framework Core for SQL Server persistence"
+
+  prohibitedPatterns:
+    - "Do not call Entity Framework or repositories directly from controllers; use application services and interfaces"
+    - "Do not place business logic in controllers"
+    - "Do not expose domain entities directly through API responses"
+    - "Do not use any in TypeScript"
+    - "Do not commit secrets or connection strings"
+
+testing:
+  coverageThresholds:
+    statements: 80
+    branches: 75
+    functions: 85
+    lines: 80
+  coverageExcludes:
+    - "**/bin/**"
+    - "**/obj/**"
+    - "**/Migrations/**"
+    - "**/*.generated.*"
+  e2e:
+    enabled: false
+    baseUrl: "http://localhost:4200"
+    headless: true
+
+integrations:
+  jira:
+    enabled: false
+    baseUrl: null
+    projectKey: null
+  git:
+    provider: github
+    owner: "auro12345"
+    repo: "DotNetAngularSQLPR"
+    defaultBranch: main
+    mergeStrategy: squash
+    requireLinearHistory: true
+    requireSignedCommits: false
+    prTemplate: null
+  monitoring:
+    enabled: false
+    provider: null
+    dashboardUrl: null
+    alertsSlackChannel: null
+  confluence:
+    enabled: false
+    baseUrl: null
+    spaceKey: null
+    releaseNotesParent: null
+    designDocsParent: null
+    apiDocsParent: null
+    healthDashboardPage: null
+    adrParent: null
+  notifications:
+    onDeployment: false
+    channel: null
+    alertsChannel: null
+
+deployment:
+  environments:
+    development:
+      url: "https://localhost:4200"
+      deployCommand: null
+    staging:
+      url: null
+      deployCommand: null
+      autoDeployOnMerge: false
+      branch: main
+    production:
+      url: null
+      deployCommand: null
+      autoDeployOnMerge: false
+      branch: main
+      requireApproval: true
+  releaseStrategy: tagged
+  versioningScheme: semver
+  changelogFormat: keepachangelog
+
+maintenance:
+  dependencyUpdateSchedule: monthly
+  securityAuditSchedule: weekly
+  techDebtReviewSchedule: monthly
+  licensing:
+    allowed:
+      - MIT
+      - Apache-2.0
+      - BSD-2-Clause
+      - BSD-3-Clause
+      - ISC
+    restricted:
+      - GPL-2.0
+      - GPL-3.0
+    blocked:
+      - UNLICENSED
+      - UNKNOWN

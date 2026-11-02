@@ -1,0 +1,67 @@
+version: 1
+project: "Product Management"
+lastUpdated: "2026-11-02"
+updatedBy: "Project Discovery Agent"
+
+patterns:
+  preferred:
+    - pattern: "Keep API controllers thin and delegate behavior to application services"
+      reason: "The repository uses interfaces and service registration to isolate application behavior"
+      appliesTo: ["ProductManagement.API", "ProductManagement.Application"]
+      addedDate: "2026-11-02"
+      source: "project-discovery"
+    - pattern: "Use DTOs between API and application boundaries"
+      reason: "Keeps persistence entities out of HTTP contracts"
+      appliesTo: ["ProductManagement.API", "ProductManagement.Application"]
+      addedDate: "2026-11-02"
+      source: "project-discovery"
+  avoid:
+    - pattern: "Do not expose Entity Framework entities from API controllers"
+      reason: "It couples the HTTP contract to database models"
+      severity: blocker
+      addedDate: "2026-11-02"
+      source: "project-discovery"
+    - pattern: "Do not use any in TypeScript"
+      reason: "Preserves type safety in the Angular client"
+      severity: blocker
+      addedDate: "2026-11-02"
+      source: "project-discovery"
+
+reviewOverrides:
+  skipForPaths:
+    - "**/bin/**"
+    - "**/obj/**"
+    - "**/Migrations/*.Designer.cs"
+  extraSecurityPaths:
+    - "ProductManagement.API/**"
+    - "ProductManagement.Infrastructure/Data/**"
+
+agentHints:
+  requirements:
+    - "Infer requirements from Stories/*.md and existing API behavior when an external issue tracker is unavailable"
+  development:
+    - "Run backend commands from the repository root and frontend commands with npm --prefix product-management-ui"
+    - "Preserve the Domain, Application, Infrastructure, and API project boundaries"
+  review:
+    - "Check SQL Server connection handling and dependency injection changes for secret exposure and runtime configuration issues"
+  testing:
+    - "Before adding coverage thresholds, add a backend or frontend test project so the configured commands are valid"
+  architecture:
+    - "Prefer repository interfaces and application services over database access inside controllers"
+  maintenance:
+    - "Audit both NuGet dependencies and npm dependencies"
+
+process:
+  skipDesignDocForTypes:
+    - "chore"
+  autonomousOnLabels: []
+  skipReviewForPaths:
+    - "*.md"
+    - "**/*.Designer.cs"
+  alwaysPostReleaseNotes: false
+  requireHumanReviewForPaths:
+    - "ProductManagement.Infrastructure/Data/**"
+    - "ProductManagement.API/Program.cs"
+
+techDebt: []
+postmortems: []

@@ -1,0 +1,46 @@
+version: "1.0"
+
+sourceControl:
+  provider: github
+  github:
+    enabled: true
+    owner: "auro12345"
+    repo: "DotNetAngularSQLPR"
+    defaultBranch: main
+    mergeStrategy: squash
+    requireLinearHistory: true
+    requireSignedCommits: false
+    prTemplate: null
+
+issueTracking:
+  provider: none
+  jira:
+    enabled: false
+  githubIssues:
+    enabled: false
+
+design:
+  figma:
+    enabled: false
+
+documentation:
+  confluence:
+    enabled: false
+
+notifications:
+  slack:
+    enabled: false
+  microsoftTeams:
+    enabled: false
+
+monitoring:
+  provider: none
+
+externalSources:
+  fetchLinkedUrls: true
+  attachments:
+    images: true
+    pdfs: true
+    markdownFiles: true
+    officeFiles: false
+    maxSizeMb: 10
