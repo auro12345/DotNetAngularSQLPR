@@ -1,0 +1,133 @@
+---
+description: Testing standards — governs test creation, coverage expectations, test naming, and test execution strategy for all project types.
+globs: ["**/*.test.*", "**/*.spec.*", "**/test_*.py", "**/__tests__/**"]
+alwaysApply: false
+---
+
+# Testing Rule
+
+## Test-First Mandate
+Tests are written BEFORE full implementation (see `03-development.mdc`).
+Tests define the contract; implementation fulfills the contract.
+
+## AC Traceability — Required
+
+Every test that implements an acceptance criterion MUST embed the AC ID in its description string. This is not optional.
+
+**ID format:** `[TICKET-ID]-AC-N` (e.g., `PROJ-123-AC-1`)
+
+```typescript
+// ✅ CORRECT — AC ID embedded in description
+it('[PROJ-123-AC-1] returns a token when credentials are valid', ...)
+it('[PROJ-123-AC-2] throws UnauthorizedError when password is wrong', ...)
+
+// ❌ WRONG — no AC reference
+it('returns a token when credentials are valid', ...)
+```
+
+The same rule applies in all languages — put the AC ID in the test description/function name (see `agentic-pdlc-framework/agents/05-testing-agent.md` for per-language examples).
+
+**Before writing tests:**
+1. Load the requirements doc and extract all `[TICKET-ID]-AC-N` IDs
+2. Build the AC → Test mapping table (in the requirements doc)
+3. Every AC must map to at least one test
+
+**After writing tests:**
+- Update the Traceability Matrix in `docs/designs/TICKET-ID-requirements.md`
+- Post the matrix as a Jira comment via `mcp__jira__add_comment`
+
+## Test Structure
+
+### Unit Tests
+Test individual functions/methods in isolation.
+```
+Naming: [unit under test]_[scenario]_[expected outcome]
+Example: login_withInvalidPassword_throwsUnauthorizedError
+```
+
+### Integration Tests
+Test interactions between components (service + DB, API + service).
+```
+Naming: [flow description]_[scenario]_[expected outcome]
+Example: userRegistration_withDuplicateEmail_returns409
+```
+
+### Test File Location
+- Co-locate with source: `src/auth/auth.service.test.ts` next to `auth.service.ts`
+- Or in `__tests__/` subdirectory matching source structure
+- Follow project convention from `config/project.yaml`
+
+## Test Coverage Requirements
+
+| Category | Minimum Coverage |
+|----------|-----------------|
+| Business logic / domain | 90% |
+| API handlers | 85% |
+| Utility functions | 80% |
+| UI components | 70% |
+| Integration flows | Key paths covered |
+
+## Test Quality Standards
+
+### AAA Pattern — Required
+Every test follows Arrange-Act-Assert:
+```typescript
+it('returns token when credentials are valid', async () => {
+  // Arrange
+  const user = createTestUser({ email: 'test@example.com' });
+  mockUserRepo.findByEmail.mockResolvedValue(user);
+
+  // Act
+  const result = await authService.login('test@example.com', 'correct-password');
+
+  // Assert
+  expect(result.token).toBeDefined();
+  expect(result.expiresIn).toBe(3600);
+});
+```
+
+### Mock Discipline
+- Mock external dependencies (DB, HTTP, file system, time)
+- Do NOT mock internal business logic being tested
+- Prefer integration tests with real DB over mocking the DB layer
+- Always reset mocks between tests
+
+### Test Data
+- Use builder/factory functions for test data (`createTestUser()`, `buildOrder()`)
+- Never use production data in tests
+- Test boundary values: empty string, null, max length, negative numbers, zero
+
+## What Must Be Tested
+
+For every piece of implementation:
+- [ ] Happy path — the expected, normal case
+- [ ] Invalid input — wrong types, missing required fields, out-of-range values
+- [ ] Error cases — external service failure, DB error, network timeout
+- [ ] Edge cases — empty collections, single items, maximum limits
+- [ ] Security cases — unauthorized access, injection attempts (for API/handlers)
+
+## Running Tests
+
+Use the command from `config/project.yaml` at `commands.test`.
+Default fallbacks:
+- JS/TS: `npm test` or `npx vitest run`
+- Python: `pytest`
+- Java: `mvn test` or `gradle test`
+- Go: `go test ./...`
+
+After implementation, ALL tests must pass. Never commit with failing tests.
+
+## Test Reporting
+After running tests, always include the AC Traceability Report:
+```
+Tests: 42 passed, 0 failed, 3 skipped
+Coverage: 87% (lines), 82% (branches)
+Duration: 4.2s
+
+AC Traceability:
+  PROJ-123-AC-1  ✅  2 tests passing
+  PROJ-123-AC-2  ✅  1 test passing
+  PROJ-123-AC-3  ❌  NO TEST — add before PR
+```
+
+If any AC shows ❌, block progress and write the missing tests before reporting done.

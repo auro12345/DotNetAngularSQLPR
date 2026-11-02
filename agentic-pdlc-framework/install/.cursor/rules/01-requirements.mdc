@@ -1,0 +1,162 @@
+---
+description: Requirements gathering and intake — governs how agents read, fetch, and interpret requirements from ALL sources including Jira, Figma, Confluence, GitHub, attachments, images, and external links.
+globs:
+alwaysApply: false
+---
+
+# Requirements Rule
+
+## When This Applies
+When the agent is starting a new feature, bug fix, or enhancement task and needs to gather requirements.
+
+## Integration Configuration
+Always read `config/integrations.yaml` first. This file controls:
+- Which issue tracker to use (Jira / GitHub Issues / Linear)
+- Whether Figma is enabled and what to extract
+- Which external URL routes to which MCP
+- Whether to fetch attachments and linked URLs
+
+## Requirements Sources (process ALL of these, in this order)
+
+### 1. Issue Tracker (Jira / GitHub Issues / Linear)
+Fetch the ticket and extract EVERY piece of content:
+- Full description (not a summary — the entire text)
+- Acceptance criteria (custom field or parsed from description)
+- **Remote Links / Web Links** — all explicitly added external URLs
+- **Attachments** — every file uploaded to the ticket
+- **Comments** — full thread for additional context
+- Linked tickets (parent epic, blockers, relates-to)
+
+### 2. Figma Design Links (MANDATORY if present)
+**Detect** Figma URLs in: description, web links, comments, any field.
+Figma URL patterns: `figma.com/file/`, `figma.com/design/`, `figma.com/proto/`
+
+**If found AND `config/integrations.yaml > design.figma.enabled = true`:**
+Extract using `agentic-pdlc-framework/skills/figma-integration.md`:
+- ✅ Frame export as image (embed in requirements)
+- ✅ All UI components with variants/states
+- ✅ Every text string: labels, placeholders, error messages, button text (exact strings)
+- ✅ Color tokens and typography styles used
+- ✅ Spacing/layout values
+- ✅ All prototype interactions (trigger → action → destination)
+- ✅ Responsive variants (mobile, tablet if present)
+- ✅ Designer annotations (unresolved comments on the frame)
+
+Each text string → Functional Requirement
+Each interaction → Acceptance Criterion
+
+**If found but Figma NOT configured:**
+Flag: `⚠️ DESIGN GAP: Figma link found but MCP not configured — configure in config/integrations.yaml`
+Ask user: "A Figma design is linked. Shall I proceed without it, or can you set up Figma access?"
+
+### 3. Other External URLs and Attachments
+Process ALL sources using `agentic-pdlc-framework/skills/external-sources.md`:
+
+| Source Type | Handler | What to Extract |
+|------------|---------|-----------------|
+| Confluence page links | Confluence MCP | Full page content, summarize relevant sections |
+| Linked Jira tickets | Jira MCP | Summary, status, ACs — used as dependency context |
+| GitHub issue/PR links | GitHub MCP | What was the issue, how was it resolved |
+| Image attachments (jpg/png/gif) | Vision | Describe: layout, components, state, data shown |
+| PDF attachments | Text extraction | Spec tables, requirement lists, API contracts |
+| Text/Markdown attachments | Read directly | All content |
+| Other URLs (public) | HTTP fetch | Page title + main content summary |
+
+**Never skip attachments or remote links.** They often contain the real specification.
+
+### 4. Git Context
+- Recent commits on files related to this feature area
+- Open PRs touching the same code paths
+
+### 5. Local Documentation
+- `docs/` folder for existing specs and ADRs
+- `README.md` for project-level constraints
+- `config/project.yaml` for tech stack and coding standards
+
+### 6. Direct User Prompt
+Treat any constraints or details the user provides as highest-priority override.
+
+---
+
+## Requirements Analysis Protocol
+
+After gathering from ALL sources, structure the output:
+
+```
+1. Restate the requirement in own words (2-3 sentences)
+2. Include design specification section (Figma output, if found)
+3. Include external sources section (what was found and fetched)
+4. List functional requirements (behavior, including each Figma interaction)
+5. List non-functional requirements (performance, security, accessibility)
+6. List acceptance criteria (testable Given/When/Then)
+7. List out-of-scope items explicitly
+8. List dependencies with status
+9. List ambiguities requiring clarification
+```
+
+## Figma → Requirements Mapping
+
+| Figma Finding | Maps To |
+|--------------|---------|
+| Component name + states | FR: "System must support [state] state for [component]" |
+| Text string | FR: "[Element] displays exact text: '[string]'" |
+| Prototype: click → navigate | AC: "When [element] clicked, user is taken to [destination]" |
+| Prototype: click → overlay | AC: "When [element] clicked, [overlay name] opens" |
+| Prototype: hover state | FR: "[Element] shows [visual change] on hover" |
+| Error state variant | AC: "When [condition], [element] shows error state with '[error text]'" |
+| Loading/disabled state | AC: "While [operation] is in progress, [element] is disabled/shows spinner" |
+| Responsive variant (mobile) | NFR: "Layout adapts to 375px width as shown in Figma mobile frame" |
+| Designer annotation | Constraint added to relevant FR or AC |
+
+## Clarification Rules
+
+Clarifications are NOT asked in the chat. They go to Jira. Jira is the single source of truth for requirement discussions.
+
+### When ambiguities exist after analysis:
+1. **Post to Jira** via `mcp__jira__add_comment` with all questions grouped by category, each tagged `[Qn]`
+2. **Save state** to `docs/designs/[TICKET-ID]-clarification.md` — records question IDs, timestamp, and pending/answered status
+3. **Stop** — print a pause message to the user and do NOT proceed to design
+4. On **re-invocation**, fetch Jira comments newer than the saved timestamp, match answers to `[Qn]` IDs, update state
+5. **Repeat** if new ambiguities arise from the answers (post Round 2, Round 3... comments)
+6. **Proceed** only when all questions are answered
+
+### Question format in Jira comments:
+- Each question gets an ID: `[Q1]`, `[Q2]`, ... continuing across rounds
+- Group by category: FUNCTIONAL / UX/DESIGN / TECHNICAL / EDGE CASES
+- Reference the source of ambiguity explicitly: ticket field, Figma frame, comment thread
+- End with a prompt: "Re-run `/requirements [TICKET-ID]` after answering"
+
+### Autonomous mode exception:
+Only skip Jira loop when `/requirements [TICKET-ID] --autonomous` is passed or the ticket is a configured hotfix.
+In that case: document as `ASSUMPTION: [what] — [reason]` and post a Jira comment summarizing all assumptions made.
+
+## Acceptance Criteria Quality
+
+Each AC must be:
+- **Identified**: carries a stable `[TICKET-ID]-AC-N` ID (e.g., `PROJ-123-AC-1`)
+- **Testable**: produces a verifiable pass/fail outcome
+- **Specific**: references actual values, not vague behaviors
+- **Traceable**: links back to a source (Figma frame, ticket AC, spec doc)
+
+✅ Good: "**[PROJ-123-AC-1]** Given the user enters an invalid email, when they click Sign In, then the error message 'Invalid email or password' is displayed below the form"
+❌ Bad: "Error handling should work correctly"
+
+The AC ID is the traceability key. It will appear in:
+- The requirements doc (assigned here)
+- The test description strings (embedded by Testing Agent)
+- The Traceability Matrix (filled in after tests are written)
+- The Jira ticket comment (posted by Testing Agent)
+- Commit messages (referenced in footer)
+
+## Requirement Traceability
+
+Every piece of code written traces to a requirement.
+Record in commit message:
+```
+feat(auth): add login form with error state
+
+Implements: PROJ-123
+Design: figma.com/design/ABC123 (frame: Login Screen)
+Acceptance: PROJ-123-AC-1 (invalid creds show error), PROJ-123-AC-2 (loading state)
+Tests: auth.service.test.ts:[PROJ-123-AC-1], auth.service.test.ts:[PROJ-123-AC-2]
+```

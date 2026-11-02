@@ -1,0 +1,148 @@
+# PDLC Project Configuration — Example: Node.js + Express REST API
+# TypeScript Express API with PostgreSQL, Jest, and GitHub Actions CI
+
+project:
+  name: "my-express-api"
+  description: "RESTful API for user management and order processing"
+  domain: "e-commerce"
+  team: "Backend Team"
+  owner: "Alice Johnson"
+  status: active
+  detectedAt: "2024-01-15T10:30:00Z"
+
+tech:
+  primaryLanguage: TypeScript
+  languageVersion: "5.3"
+  runtimeVersion: "Node 20.x"
+  framework: Express
+  frameworkVersion: "4.x"
+  frameworkVariant: REST
+  packageManager: npm
+  packageManagerVersion: "10.x"
+  testFramework: Jest
+  e2eFramework: none
+  linter: ESLint
+  linterConfig: .eslintrc.json
+  formatter: Prettier
+  formatterConfig: .prettierrc
+  typeChecker: tsc
+  styling: none  # API, no UI
+  stateManagement: none
+  apiStyle: REST
+  databases: [PostgreSQL, Redis]
+  orm: TypeORM
+  ciCd: "GitHub Actions"
+  containerization: Docker
+  deployTarget: AWS
+  repositoryType: single
+  additionalLanguages: []
+
+commands:
+  install: "npm install"
+  dev: "npm run dev"  # ts-node-dev or nodemon
+  build: "npm run build"  # tsc
+  start: "node dist/index.js"
+  test: "npm test"
+  testWatch: "npm run test:watch"
+  testCoverage: "npm test -- --coverage"
+  lint: "npx eslint src/ --ext .ts"
+  lintFix: "npx eslint src/ --ext .ts --fix"
+  format: "npx prettier --check src/"
+  formatFix: "npx prettier --write src/"
+  typecheck: "npx tsc --noEmit"
+  audit: "npm audit --audit-level=moderate"
+  migrate: "npm run typeorm migration:run"
+  clean: "rm -rf dist"
+
+codingStandards:
+  maxFunctionLines: 10
+  maxCyclomaticComplexity: 8
+  maxFileLines: 300
+  maxClassMethods: 10
+
+  conventions:
+    componentStyle: functional  # No class-based controllers
+    importStyle: named
+    namingConvention: camelCase
+    fileNaming: kebab-case
+    testStyle: separate-folder   # tests/ mirroring src/
+    organizationPattern: layerBased  # controllers/ services/ repositories/
+
+  patterns:
+    - "Controller → Service → Repository layering"
+    - "Dependency injection via constructor"
+    - "Repository pattern for all DB access"
+    - "DTOs for all request/response shapes (class-validator)"
+    - "Custom error classes extending BaseError"
+    - "Middleware for cross-cutting concerns (auth, logging, validation)"
+    - "Express Router per domain module"
+
+  prohibitedPatterns:
+    - "No direct DB queries in controllers"
+    - "No business logic in controllers (only orchestration)"
+    - "No raw SQL strings (use TypeORM query builder)"
+    - "No any type"
+    - "No synchronous file I/O"
+    - "No unhandled promise rejections (always await or .catch())"
+
+testing:
+  coverageThresholds:
+    statements: 85
+    branches: 80
+    functions: 90
+    lines: 85
+
+  coverageExcludes:
+    - "**/*.test.ts"
+    - "src/index.ts"
+    - "src/database/migrations/**"
+    - "src/types/**"
+
+  e2e:
+    enabled: false  # Integration tests serve this role
+
+integrations:
+  jira:
+    enabled: true
+    baseUrl: "https://my-company.atlassian.net"
+    projectKey: "API"
+
+  git:
+    provider: github
+    owner: "my-org"
+    repo: "my-express-api"
+    defaultBranch: main
+    mergeStrategy: squash
+    requireLinearHistory: true
+    requireSignedCommits: false
+
+  monitoring:
+    enabled: true
+    provider: datadog
+    dashboardUrl: "https://app.datadoghq.com/dashboard/xxx"
+    alertsSlackChannel: "#api-alerts"
+
+deployment:
+  environments:
+    development:
+      url: "http://localhost:3000"
+    staging:
+      url: "https://api-staging.mycompany.com"
+      deployCommand: "aws ecs update-service --cluster staging --service api"
+      autoDeployOnMerge: true
+      branch: main
+    production:
+      url: "https://api.mycompany.com"
+      deployCommand: "aws ecs update-service --cluster production --service api"
+      autoDeployOnMerge: false
+      branch: main
+      requireApproval: true
+
+  releaseStrategy: tagged
+  versioningScheme: semver
+  changelogFormat: keepachangelog
+
+maintenance:
+  dependencyUpdateSchedule: monthly
+  securityAuditSchedule: weekly
+  techDebtReviewSchedule: monthly

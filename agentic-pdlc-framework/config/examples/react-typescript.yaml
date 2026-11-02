@@ -1,0 +1,153 @@
+# PDLC Project Configuration — Example: React + TypeScript (Next.js)
+# Full-stack Next.js app with TypeScript, Prisma, and Vitest
+
+project:
+  name: "my-nextjs-app"
+  description: "Next.js full-stack web application with App Router"
+  domain: "saas"
+  team: "Full Stack Team"
+  owner: "John Doe"
+  status: active
+  detectedAt: "2024-01-15T10:30:00Z"
+
+tech:
+  primaryLanguage: TypeScript
+  languageVersion: "5.4"
+  runtimeVersion: "Node 20.x"
+  framework: Next.js
+  frameworkVersion: "14.x"
+  frameworkVariant: "App Router"
+  packageManager: pnpm
+  packageManagerVersion: "8.x"
+  testFramework: Vitest
+  e2eFramework: Playwright
+  linter: ESLint
+  linterConfig: .eslintrc.json
+  formatter: Prettier
+  formatterConfig: .prettierrc
+  typeChecker: tsc
+  styling: "Tailwind CSS"
+  stateManagement: "TanStack Query + Zustand"
+  apiStyle: REST
+  databases: [PostgreSQL, Redis]
+  orm: Prisma
+  ciCd: "GitHub Actions"
+  containerization: Docker
+  deployTarget: Vercel
+  repositoryType: single
+  additionalLanguages: []
+
+commands:
+  install: "pnpm install"
+  dev: "pnpm dev"
+  build: "pnpm build"
+  start: "pnpm start"
+  test: "pnpm vitest run"
+  testWatch: "pnpm vitest"
+  testCoverage: "pnpm vitest run --coverage"
+  lint: "pnpm eslint src/ --ext .ts,.tsx"
+  lintFix: "pnpm eslint src/ --ext .ts,.tsx --fix"
+  format: "pnpm prettier --check ."
+  formatFix: "pnpm prettier --write ."
+  typecheck: "pnpm tsc --noEmit"
+  audit: "pnpm audit --audit-level=moderate"
+  migrate: "pnpm prisma migrate dev"
+  clean: "rm -rf .next node_modules/.cache"
+
+codingStandards:
+  maxFunctionLines: 10
+  maxCyclomaticComplexity: 8
+  maxFileLines: 300
+  maxClassMethods: 10
+
+  conventions:
+    componentStyle: functional
+    importStyle: named
+    namingConvention: camelCase
+    fileNaming: kebab-case         # page.tsx, loading.tsx, error.tsx (Next.js conventions)
+    testStyle: colocated
+    organizationPattern: featureBased
+
+  patterns:
+    - "Server Components by default, Client Components only when needed"
+    - "Server Actions for form mutations"
+    - "Custom hooks for reusable stateful logic"
+    - "TanStack Query for client-side data fetching"
+    - "Zustand for client UI state only"
+    - "Prisma repository pattern for data access"
+    - "Zod for runtime validation"
+    - "No direct database access in components"
+
+  prohibitedPatterns:
+    - "No 'use client' on page.tsx files (use layout composition)"
+    - "No useEffect for data fetching (use Server Components or TanStack Query)"
+    - "No any type — use unknown and narrow"
+    - "No non-null assertions (!) without comment explaining why safe"
+    - "No default exports (except Next.js required page/layout/route files)"
+    - "No direct fetch in components (wrap in service functions)"
+
+testing:
+  coverageThresholds:
+    statements: 80
+    branches: 75
+    functions: 85
+    lines: 80
+
+  coverageExcludes:
+    - "**/*.test.ts"
+    - "**/*.test.tsx"
+    - "**/generated/**"
+    - "prisma/**"
+    - "next.config.*"
+    - "tailwind.config.*"
+
+  e2e:
+    enabled: true
+    baseUrl: "http://localhost:3000"
+    headless: true
+
+integrations:
+  jira:
+    enabled: true
+    baseUrl: "https://my-company.atlassian.net"
+    projectKey: "APP"
+
+  git:
+    provider: github
+    owner: "my-org"
+    repo: "my-nextjs-app"
+    defaultBranch: main
+    mergeStrategy: squash
+    requireLinearHistory: true
+    requireSignedCommits: true
+
+  monitoring:
+    enabled: true
+    provider: sentry
+    dashboardUrl: "https://sentry.io/organizations/my-org/projects/my-nextjs-app"
+    alertsSlackChannel: "#app-alerts"
+
+deployment:
+  environments:
+    development:
+      url: "http://localhost:3000"
+    staging:
+      url: "https://staging-myapp.vercel.app"
+      deployCommand: "vercel --prebuilt"
+      autoDeployOnMerge: true
+      branch: main
+    production:
+      url: "https://myapp.com"
+      deployCommand: "vercel --prod --prebuilt"
+      autoDeployOnMerge: false
+      branch: main
+      requireApproval: true
+
+  releaseStrategy: continuous
+  versioningScheme: semver
+  changelogFormat: keepachangelog
+
+maintenance:
+  dependencyUpdateSchedule: monthly
+  securityAuditSchedule: weekly
+  techDebtReviewSchedule: monthly

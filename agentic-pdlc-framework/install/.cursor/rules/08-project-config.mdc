@@ -1,0 +1,74 @@
+---
+description: Project configuration rule — governs how agents read, interpret, and respect the project.yaml configuration file. All tech-stack-specific behavior is driven from this config.
+globs: ["config/project.yaml", "agentic-pdlc-framework/config/project.template.yaml"]
+alwaysApply: true
+---
+
+# Project Configuration Rule
+
+## Config File: config/project.yaml
+
+This file is the **single source of truth** for all project-level settings.
+Every agent and rule reads from this file. Never hard-code project-specific values in rules.
+
+## Config Hierarchy
+
+```
+config/
+├── project.yaml          ← Active project config (auto-updated by discovery)
+├── project.template.yaml ← Blank template for new projects
+└── examples/
+    ├── react-javascript.yaml
+    ├── react-typescript.yaml
+    ├── node-express-api.yaml
+    ├── python-fastapi.yaml
+    ├── java-spring-boot.yaml
+    └── next-fullstack.yaml
+```
+
+## How Agents Use Config
+
+### Reading tech stack
+```yaml
+# Agents read tech section to determine:
+# - What linter to run
+# - What test runner to execute
+# - What formatter to apply
+# - What build tool to use
+```
+
+### Overriding defaults
+Config values override rule defaults. If `codingStandards.maxFunctionLines: 15`
+is set, the development rule uses 15, not the default 10.
+
+### Protected fields
+Agents MUST NOT overwrite these fields without user confirmation:
+- `project.name`
+- `project.description`
+- `project.domain`
+- `integrations.jira.*`
+- `integrations.git.defaultBranch`
+- `deployment.*`
+
+### Auto-updatable fields (updated by discovery agent)
+- `tech.*` (detected from package.json, build files)
+- `project.detectedAt` (timestamp of last scan)
+- `codingStandards.conventions` (inferred from existing code patterns)
+
+## Config Validation
+
+Before starting work, validate config:
+- [ ] `project.name` is set (not "unknown")
+- [ ] `tech.primaryLanguage` is detected
+- [ ] `commands.test` resolves to an executable command
+- [ ] `commands.lint` resolves to an executable command
+
+If validation fails, report which fields need attention and offer to run discovery.
+
+## Extending Config
+
+To add a new field:
+1. Add it to `project.template.yaml` with a comment explaining its purpose
+2. Add it to the relevant example config files
+3. Update the discovery agent to auto-detect the value where possible
+4. Document the new field in `agentic-pdlc-framework/docs/configuration.md`

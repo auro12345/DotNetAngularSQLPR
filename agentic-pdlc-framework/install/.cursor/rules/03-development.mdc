@@ -1,0 +1,141 @@
+---
+description: Development standards — governs code implementation quality, structure, and the skeleton-first approach. Applies to all code files being created or modified.
+globs: ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx", "**/*.py", "**/*.java", "**/*.go", "**/*.rs", "**/*.cs"]
+alwaysApply: false
+---
+
+# Development Rule
+
+## Phase 0 — Branch Creation (MANDATORY BEFORE ANY FILE CHANGES)
+
+**This is the first action. No file may be created or modified until the branch exists.**
+
+```bash
+# For features:
+git checkout -b feat/[TICKET-ID]-[short-description]
+
+# For bug fixes:
+git checkout -b fix/[TICKET-ID]-[short-description]
+
+# For chores/deps/docs:
+git checkout -b chore/[TICKET-ID]-[short-description]
+```
+
+Gate checks before creating the branch:
+- [ ] `docs/designs/[TICKET-ID]-requirements.md` exists
+- [ ] `docs/designs/[TICKET-ID]-design.md` exists (or user has explicitly approved inline design)
+
+If either doc is missing: **STOP. Run the requirements or design phase first.**
+
+If a branch for this ticket already exists, check it out instead of creating a new one:
+```bash
+git branch | grep [TICKET-ID]   # check if it exists
+git checkout feat/[TICKET-ID]-... # check it out
+```
+
+**Never do ticket work on the default branch (main, master, develop, or any integration branch).** If you realise you are on the wrong branch after making changes, use `git stash`, switch to the feature branch, and `git stash pop` before creating any commits.
+
+---
+
+## Skeleton-First Approach
+
+**Never start with full implementation.** Always follow this sequence:
+
+### 1. Create the Skeleton
+```
+- Define all classes with meaningful names
+- Define all method/function signatures with typed parameters and return types
+- Add descriptive docstring on each class/function (what it does, not how)
+- Add TODO: comments for each method body
+- Ensure single responsibility per class and per function
+```
+
+Example skeleton (TypeScript):
+```typescript
+/**
+ * Handles user authentication operations.
+ * Validates credentials and issues JWT tokens.
+ */
+class AuthService {
+  /**
+   * Validates user credentials and returns a signed JWT token.
+   * @throws UnauthorizedError if credentials are invalid
+   */
+  async login(email: string, password: string): Promise<AuthToken> {
+    // TODO: validate email format
+    // TODO: fetch user from repository by email
+    // TODO: compare hashed password
+    // TODO: generate and return JWT token
+    throw new NotImplementedError('login');
+  }
+}
+```
+
+### 2. Write Tests BEFORE Implementation
+- Write tests against the skeleton (they should all fail initially)
+- Cover: happy path, edge cases, error cases, boundary values
+- Integration tests for service-level behavior
+- Unit tests for pure functions and complex logic
+
+### 3. Implement Method by Method
+- Implement one method at a time
+- Run tests after each method implementation
+- Refactor immediately if a method exceeds limits
+
+## Code Quality Standards
+
+### Function/Method Size
+- **Maximum 10 lines** per function (not counting blank lines and comments)
+- If a method grows beyond 10 lines, extract sub-functions immediately
+- Each function does exactly ONE thing (Single Responsibility)
+
+### Naming
+- Use intention-revealing names (`getUserByEmail` not `getUser` or `fetch`)
+- Boolean variables/functions: `is`, `has`, `can`, `should` prefix
+- No abbreviations except universally accepted ones (`id`, `url`, `api`, `ctx`)
+- Constants: UPPER_SNAKE_CASE
+- Classes: PascalCase; functions/variables: camelCase (JS/TS) or snake_case (Python)
+
+### Comments
+- Default: NO comments
+- Write a comment ONLY when the WHY is non-obvious (workarounds, constraints, subtle invariants)
+- Never describe WHAT the code does — the code does that
+- Never reference ticket numbers in code comments (belongs in git commit messages)
+
+### Error Handling
+- Only handle errors at system boundaries (API endpoints, external service calls, file I/O)
+- Use typed errors / custom error classes
+- Never swallow exceptions silently
+- Always log errors with context before re-throwing
+
+### Dependencies
+- Check `config/project.yaml` for approved libraries before adding new ones
+- Prefer existing project dependencies over introducing new ones
+- Document reason for any new dependency in the PR description
+
+## Static Analysis
+After implementation, run the project's configured linter/formatter:
+- Check `config/project.yaml` for `tech.linter` and `tech.formatter`
+- All linting errors must be resolved before proceeding to review
+- Zero tolerance for: unused variables, implicit any (TS), missing type hints (Python)
+
+## Tech Stack Conventions
+
+Load these from `config/project.yaml` at `codingStandards.conventions`:
+
+**React / TypeScript default conventions:**
+- Functional components only (no class components)
+- Custom hooks for stateful logic (`use` prefix)
+- Props interfaces defined above the component
+- No inline styles; use CSS modules or the configured styling system
+- `React.FC` not used; type props directly
+
+**Python default conventions:**
+- Type hints on all public functions
+- Dataclasses or Pydantic models for data structures
+- `async/await` for I/O operations
+
+**Java / Spring default conventions:**
+- Constructor injection (not field injection)
+- Immutable value objects where possible
+- Repository pattern for data access

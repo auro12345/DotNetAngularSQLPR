@@ -1,0 +1,152 @@
+# PDLC Project Configuration — Example: React + JavaScript
+# Typical React SPA with Vite, JavaScript (no TypeScript), and Jest
+
+project:
+  name: "my-react-app"
+  description: "A React single-page application for managing customer orders"
+  domain: "e-commerce"
+  team: "Frontend Team"
+  owner: "Jane Smith"
+  status: active
+  detectedAt: "2024-01-15T10:30:00Z"
+
+tech:
+  primaryLanguage: JavaScript
+  languageVersion: "ES2022"
+  runtimeVersion: "Node 20.x"
+  framework: React
+  frameworkVersion: "18.x"
+  frameworkVariant: SPA
+  packageManager: npm
+  packageManagerVersion: "10.x"
+  testFramework: Jest
+  e2eFramework: Playwright
+  linter: ESLint
+  linterConfig: .eslintrc.js
+  formatter: Prettier
+  formatterConfig: .prettierrc
+  typeChecker: none  # JavaScript, no TypeScript
+  styling: "Tailwind CSS"
+  stateManagement: "TanStack Query"
+  apiStyle: REST
+  databases: []  # Frontend only — no direct DB access
+  orm: none
+  ciCd: "GitHub Actions"
+  containerization: none
+  deployTarget: Vercel
+  repositoryType: single
+  additionalLanguages: []
+
+commands:
+  install: "npm install"
+  dev: "npm run dev"
+  build: "npm run build"
+  start: "npx serve dist"
+  test: "npm test -- --watchAll=false"
+  testWatch: "npm test"
+  testCoverage: "npm test -- --coverage --watchAll=false"
+  lint: "npx eslint src/ --ext .js,.jsx"
+  lintFix: "npx eslint src/ --ext .js,.jsx --fix"
+  format: "npx prettier --check src/"
+  formatFix: "npx prettier --write src/"
+  typecheck: "echo 'No TypeScript — skipping typecheck'"
+  audit: "npm audit --audit-level=moderate"
+  clean: "rm -rf dist node_modules/.cache"
+
+codingStandards:
+  maxFunctionLines: 10
+  maxCyclomaticComplexity: 8
+  maxFileLines: 300
+  maxClassMethods: 10
+
+  conventions:
+    componentStyle: functional      # React functional components only
+    importStyle: named
+    namingConvention: camelCase
+    fileNaming: PascalCase          # Components: MyComponent.jsx
+    testStyle: colocated            # MyComponent.test.jsx next to MyComponent.jsx
+    organizationPattern: featureBased
+
+  patterns:
+    - "Custom hooks for stateful logic (use prefix)"
+    - "Context API for global UI state"
+    - "TanStack Query for server state"
+    - "Component composition over inheritance"
+    - "Props passed down, callbacks up"
+
+  prohibitedPatterns:
+    - "No class components"
+    - "No prop drilling beyond 2 levels (use Context or custom hook)"
+    - "No direct DOM manipulation with document.getElementById"
+    - "No inline styles (use Tailwind classes)"
+    - "No default exports for components (use named exports)"
+
+testing:
+  coverageThresholds:
+    statements: 75
+    branches: 70
+    functions: 80
+    lines: 75
+
+  coverageExcludes:
+    - "**/*.test.js"
+    - "**/*.test.jsx"
+    - "src/index.js"
+    - "src/setupTests.js"
+    - "src/reportWebVitals.js"
+
+  e2e:
+    enabled: true
+    baseUrl: "http://localhost:5173"
+    headless: true
+
+integrations:
+  jira:
+    enabled: true
+    baseUrl: "https://my-company.atlassian.net"
+    projectKey: "FE"
+
+  git:
+    provider: github
+    owner: "my-org"
+    repo: "my-react-app"
+    defaultBranch: main
+    mergeStrategy: squash
+    requireLinearHistory: true
+    requireSignedCommits: false
+
+  monitoring:
+    enabled: true
+    provider: sentry
+    dashboardUrl: "https://sentry.io/organizations/my-org/projects/my-react-app"
+    alertsSlackChannel: "#frontend-alerts"
+
+deployment:
+  environments:
+    development:
+      url: "http://localhost:5173"
+    staging:
+      url: "https://staging-myapp.vercel.app"
+      deployCommand: "vercel --prebuilt"
+      autoDeployOnMerge: true
+      branch: main
+    production:
+      url: "https://myapp.com"
+      deployCommand: "vercel --prod --prebuilt"
+      autoDeployOnMerge: false
+      branch: main
+      requireApproval: true
+
+  releaseStrategy: continuous
+  versioningScheme: semver
+  changelogFormat: keepachangelog
+
+maintenance:
+  dependencyUpdateSchedule: monthly
+  securityAuditSchedule: weekly
+  techDebtReviewSchedule: monthly
+
+  licensing:
+    allowed: [MIT, Apache-2.0, BSD-2-Clause, BSD-3-Clause, ISC]
+    restricted: [GPL-2.0, GPL-3.0]
+    blocked: [UNLICENSED, UNKNOWN]

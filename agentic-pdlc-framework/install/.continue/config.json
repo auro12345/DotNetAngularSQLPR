@@ -1,0 +1,70 @@
+{
+  "models": [
+    {
+      "title": "Claude Sonnet (PDLC)",
+      "provider": "anthropic",
+      "model": "claude-sonnet-4-6",
+      "apiKey": "$ANTHROPIC_API_KEY",
+      "systemMessage": "You are a senior software engineer using the PDLC Framework. Before any coding task, check config/project.yaml for the project's tech stack and coding standards. Follow skeleton-first development, write tests before implementation, and keep functions under 10 lines. All commits use Conventional Commits format. See .cursor/rules/ for detailed behavioral rules and agentic-pdlc-framework/agents/ for agent playbooks."
+    }
+  ],
+  "slashCommands": [
+    {
+      "name": "scan",
+      "description": "Scan project and update config/project.yaml",
+      "prompt": "Run the Project Discovery Agent. Scan this project's file system, detect the tech stack, and create or update config/project.yaml. Follow agentic-pdlc-framework/agents/01-project-discovery-agent.md."
+    },
+    {
+      "name": "requirements",
+      "description": "Fetch and analyze requirements for a ticket",
+      "prompt": "Run the Requirements Agent for ticket {{{ input }}}. Follow agentic-pdlc-framework/agents/02-requirements-agent.md. Fetch the ticket, structure requirements, identify ACs, and surface ambiguities."
+    },
+    {
+      "name": "design",
+      "description": "Design solution for a ticket",
+      "prompt": "Run the Architecture Agent for ticket {{{ input }}}. Follow agentic-pdlc-framework/agents/03-architecture-agent.md. Design the solution, create diagrams, and save to docs/designs/."
+    },
+    {
+      "name": "implement",
+      "description": "Implement a solution skeleton-first",
+      "prompt": "Run the Development Agent for ticket {{{ input }}}. Follow agentic-pdlc-framework/agents/04-development-agent.md strictly: skeleton first, then tests, then implementation."
+    },
+    {
+      "name": "review",
+      "description": "Self-review all current changes",
+      "prompt": "Run the Code Review Agent. Follow agentic-pdlc-framework/agents/06-review-agent.md. Review all changed files for correctness, security, performance, and quality. Produce BLOCKER/WARNING/SUGGESTION report."
+    },
+    {
+      "name": "fix",
+      "description": "Bug fix flow for a ticket",
+      "prompt": "Run the bug fix flow for ticket {{{ input }}}. Follow agentic-pdlc-framework/agents/08-maintenance-agent.md for triage and agentic-pdlc-framework/agents/04-development-agent.md for the fix. Write regression test first."
+    }
+  ],
+  "contextProviders": [
+    {
+      "name": "file",
+      "params": {}
+    },
+    {
+      "name": "codebase",
+      "params": {}
+    },
+    {
+      "name": "docs",
+      "params": {
+        "startUrl": "file://./agentic-pdlc-framework/docs/README.md",
+        "rootUrl": "file://./agentic-pdlc-framework/docs/"
+      }
+    }
+  ],
+  "rules": [
+    "Always check config/project.yaml before starting any task",
+    "Use skeleton-first development: create structure before logic",
+    "Write tests before implementation — they should fail initially",
+    "Functions max 10 lines (check codingStandards.maxFunctionLines in project.yaml)",
+    "No comments unless WHY is non-obvious",
+    "Conventional Commits format with Implements: TICKET-ID footer",
+    "No git add -A or git add . — stage specific files only",
+    "No PR until code review passes with 0 BLOCKERs"
+  ]
+}

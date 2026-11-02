@@ -1,0 +1,100 @@
+---
+description: Code review standards — governs automated self-review before committing. Every change must pass this review checklist before a PR is created.
+globs:
+alwaysApply: false
+---
+
+# Code Review Rule
+
+## Self-Review Before PR
+
+The agent performs a structured self-review of all changes before creating a PR.
+This is not optional. Run through every section below.
+
+## Review Checklist
+
+### 1. Correctness
+- [ ] Implementation matches the acceptance criteria from the ticket
+- [ ] All edge cases identified in requirements are handled
+- [ ] No off-by-one errors in loops or index operations
+- [ ] Async operations properly awaited; no unhandled promise rejections
+- [ ] Null/undefined/None properly guarded before access
+- [ ] Return types match declared signatures
+
+### 2. Code Quality
+- [ ] No function longer than 10 lines (project default; override in project.yaml)
+- [ ] No class with more than one responsibility
+- [ ] No duplicated logic (DRY — extract if 3+ repetitions)
+- [ ] No magic numbers or strings — use named constants
+- [ ] No dead code, commented-out code, or debug statements left in
+- [ ] No `TODO` without a ticket reference (temporary TODOs must reference a Jira/GitHub issue)
+- [ ] Imports are clean — no unused imports
+
+### 3. Security
+- [ ] User input is validated/sanitized at entry points
+- [ ] No secrets, credentials, or API keys in code or config files
+- [ ] SQL queries use parameterized statements (no string concatenation)
+- [ ] Authentication/authorization checked on all protected endpoints
+- [ ] Sensitive data not logged
+- [ ] Dependencies do not have known CVEs (check `npm audit` / `pip-audit` / `gradle dependencyCheckAnalyze`)
+
+### 4. Performance
+- [ ] No N+1 query problems (batching/eager-loading used where needed)
+- [ ] Expensive operations cached where appropriate
+- [ ] No blocking synchronous operations in async contexts
+- [ ] Large data sets paginated, not loaded entirely into memory
+- [ ] New database queries have appropriate indexes
+
+### 5. Maintainability
+- [ ] Variable and function names are intention-revealing
+- [ ] Complex logic has a single-line explanation comment (WHY, not WHAT)
+- [ ] New abstractions follow the project's existing patterns
+- [ ] No circular dependencies introduced
+- [ ] Migrations are reversible (down migration provided)
+
+### 6. Test Coverage and AC Traceability
+- [ ] **Every AC in the requirements doc has at least one test** — verify by searching for each `[TICKET-ID]-AC-N` in the test suite
+  - Run: `grep -r "TICKET-ID-AC-" tests/` (or equivalent path)
+  - Any AC with 0 hits = **BLOCKER**
+- [ ] AC IDs are embedded in test description strings (not just in comments)
+- [ ] Traceability Matrix in `docs/designs/TICKET-ID-requirements.md` is filled in and up to date
+- [ ] All new code has corresponding tests
+- [ ] Tests cover happy path, error cases, and edge cases
+- [ ] No test logic bypassed (`skip`, `only`, `xfail`) without ticket reference
+
+### 7. Documentation
+- [ ] Public API changes reflected in docs/API.md or OpenAPI spec
+- [ ] CHANGELOG.md updated if this is a user-facing change
+- [ ] README updated if setup/usage steps changed
+
+## Automated Review Commands
+
+Run these before creating the PR (commands from `config/project.yaml`):
+```
+1. Linter:    [project linter command]
+2. Formatter: [project formatter command] --check
+3. Tests:     [project test command]
+4. Type check: [project typecheck command]
+5. Security:  [project audit command]
+```
+
+## Review Output Format
+
+After self-review, produce:
+```markdown
+## Code Review Summary
+
+### Issues Found
+- [BLOCKER] Description of issue and file:line
+- [WARNING] Description of issue and file:line
+
+### Approved
+- Correctness: ✅
+- Security: ✅
+- Tests: ✅ (87% coverage)
+- Quality: ⚠️ (1 warning - see above)
+
+### Ready for PR: YES / NO
+```
+
+If any BLOCKER issues exist, fix them before creating the PR.

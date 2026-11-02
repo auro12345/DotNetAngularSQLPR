@@ -1,0 +1,111 @@
+---
+description: Maintenance and operations — governs how agents handle bug reports, incidents, feature requests, dependency updates, and ongoing product health.
+globs:
+alwaysApply: false
+---
+
+# Maintenance Rule
+
+## When This Applies
+- Bug reports and incident response
+- Dependency and security updates
+- Technical debt reduction tasks
+- Feature request triage
+- Performance optimization tasks
+
+## Bug Report Handling
+
+### Triage Protocol
+When a bug report comes in:
+
+1. **Reproduce the bug** — never fix what you can't reproduce
+   - Get exact steps to reproduce
+   - Get environment info (browser, OS, version, env)
+   - Get error messages and stack traces
+
+2. **Classify severity**
+   | Severity | Description | Response |
+   |----------|-------------|----------|
+   | P0 - Critical | Production down, data loss | Immediate hotfix |
+   | P1 - High | Core feature broken, no workaround | Fix in current sprint |
+   | P2 - Medium | Feature degraded, workaround exists | Fix in next sprint |
+   | P3 - Low | Minor issue, cosmetic | Backlog |
+
+3. **Root cause analysis** before fixing:
+   - Is this a symptom of a deeper issue?
+   - Does the same bug exist in similar code elsewhere?
+   - Was this a regression? Find the commit that introduced it.
+
+4. **Fix approach**
+   - For P0/P1: hotfix branch → PR → fast-track to production
+   - For P2/P3: normal development cycle
+
+5. **Write a regression test FIRST** that fails with the current code, then fix
+
+### Hotfix Protocol
+```
+1. Branch from production tag: git checkout -b hotfix/TICKET-ID-description vX.Y.Z
+2. Apply minimal fix (surgical — no refactoring during hotfix)
+3. Write regression test
+4. PR with [HOTFIX] prefix in title
+5. Deploy directly to production after approval
+6. Merge back to main/develop
+7. Create patch release tag: vX.Y.(Z+1)
+```
+
+## Dependency Management
+
+### Routine Updates (monthly)
+- Run `npm outdated` / `pip list --outdated` / `mvn versions:display-dependency-updates`
+- Group updates: patch → minor → major (separate PRs)
+- Run full test suite after each update group
+- Check breaking changes in changelogs for major version bumps
+
+### Security Patches (immediate)
+- Run `npm audit` / `pip-audit` / `gradle dependencyCheckAnalyze` weekly
+- Critical CVEs: patch within 24 hours
+- High CVEs: patch within 1 week
+- Medium/Low: include in next routine update
+
+## Technical Debt
+
+### Identification
+- Look for `// TODO`, `// FIXME`, `// HACK` comments with ticket references
+- Review code complexity metrics (functions > 10 lines, cyclomatic complexity)
+- Check for duplicate code patterns
+- Identify outdated patterns that contradict current `config/project.yaml` standards
+
+### Prioritization
+- Does the debt increase bug likelihood? → High priority
+- Does it slow down development? → Medium priority
+- Is it cosmetic/stylistic? → Low priority, batch with feature work
+
+## Incident Response
+
+### Post-Incident Review (for P0/P1)
+After resolving, create a brief post-mortem:
+```markdown
+## Incident: [title] — [date]
+
+**Impact:** [users affected, duration, severity]
+**Root Cause:** [one sentence]
+**Timeline:**
+- HH:MM — incident detected
+- HH:MM — investigation started
+- HH:MM — fix deployed
+
+**What Went Wrong:**
+**What Went Right:**
+**Action Items:**
+- [ ] [preventive measure] — assigned to [team/agent]
+```
+
+## Ongoing Health Metrics
+
+Monitor and report periodically:
+- Test pass rate trend
+- Code coverage trend
+- Build time trend
+- Bundle size (for frontend)
+- API response time p50/p95/p99
+- Error rate in production logs

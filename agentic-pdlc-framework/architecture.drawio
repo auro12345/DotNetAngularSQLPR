@@ -1,0 +1,262 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.0.3 Chrome/140.0.7339.249 Electron/38.7.0 Safari/537.36" version="29.0.3">
+  <diagram name="PDLC Framework" id="-XWL2SWNTAkDbN9yJpfV">
+    <mxGraphModel dx="702" dy="539" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="3300" pageHeight="1700" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="phase-req" value="PHASE 1: REQUIREMENTS" style="text;html=1;strokeColor=none;fillColor=#dae8fc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=11;fontStyle=1;opacity=50;" parent="1" vertex="1">
+          <mxGeometry x="60" y="70" width="470" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="phase-analysis" value="PHASE 2: ANALYSIS &amp; DESIGN" style="text;html=1;strokeColor=none;fillColor=#d5e8d4;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=11;fontStyle=1;opacity=50;" parent="1" vertex="1">
+          <mxGeometry x="550" y="70" width="470" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="phase-dev" value="PHASE 3: DEVELOPMENT" style="text;html=1;strokeColor=none;fillColor=#fff2cc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=11;fontStyle=1;opacity=50;" parent="1" vertex="1">
+          <mxGeometry x="840" y="230" width="620" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="phase-pr" value="PHASE 4: PR &amp; COMMIT" style="text;html=1;strokeColor=none;fillColor=#f8cecc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=11;fontStyle=1;opacity=50;" parent="1" vertex="1">
+          <mxGeometry x="1290" y="70" width="420" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="phase-deploy" value="PHASE 5: DEPLOYMENT" style="text;html=1;strokeColor=none;fillColor=#e1d5e7;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=11;fontStyle=1;opacity=50;" parent="1" vertex="1">
+          <mxGeometry x="1730" y="70" width="300" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="phase-maint" value="PHASE 6: MAINTENANCE &amp; OPERATIONS" style="text;html=1;strokeColor=none;fillColor=#f0a30a;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=11;fontStyle=1;opacity=50;fontColor=#000000;" parent="1" vertex="1">
+          <mxGeometry x="2050" y="70" width="380" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="6S32jmZfD75mGnc7iEMi-10" value="Connect to sources&#xa;(Jira, Git, Confluence, Docs)&#xa;to gather requirements" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="65" y="240" width="180" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="6S32jmZfD75mGnc7iEMi-1" value="Read the requirements" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="100" y="130" width="150" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="req-discovery" value="Project Discovery&#xa;(scan codebase, detect&#xa;tech stack, update config)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=2;" parent="1" vertex="1">
+          <mxGeometry x="65" y="340" width="180" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="6S32jmZfD75mGnc7iEMi-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;" parent="1" source="6S32jmZfD75mGnc7iEMi-1" target="6S32jmZfD75mGnc7iEMi-10" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-req-discovery" style="edgeStyle=orthogonalEdgeStyle;rounded=0;" parent="1" source="6S32jmZfD75mGnc7iEMi-1" target="req-discovery" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="260" y="180" />
+              <mxPoint x="260" y="370" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="6S32jmZfD75mGnc7iEMi-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;" parent="1" source="6S32jmZfD75mGnc7iEMi-1" target="6S32jmZfD75mGnc7iEMi-2" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="6S32jmZfD75mGnc7iEMi-2" value="Analyze and understand&#xa;the requirements" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="320" y="130" width="150" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="6S32jmZfD75mGnc7iEMi-3" value="Ask clarifications /&#xa;questions" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+          <mxGeometry x="500" y="210" width="150" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="6S32jmZfD75mGnc7iEMi-6" value="Analyze clarifications,&#xa;ask more questions&#xa;if needed" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+          <mxGeometry x="500" y="310" width="150" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="6S32jmZfD75mGnc7iEMi-8" value="Develop approach:&#xa;flowcharts, sequence&#xa;diagrams, architecture" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+          <mxGeometry x="500" y="410" width="150" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="6S32jmZfD75mGnc7iEMi-13" value="Revisit requirement,&#xa;validate understanding,&#xa;validate approach,&#xa;revise if needed" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+          <mxGeometry x="680" y="125" width="170" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="6S32jmZfD75mGnc7iEMi-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;" parent="1" source="6S32jmZfD75mGnc7iEMi-2" target="6S32jmZfD75mGnc7iEMi-3" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="410" y="240" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="6S32jmZfD75mGnc7iEMi-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;" parent="1" source="6S32jmZfD75mGnc7iEMi-2" target="6S32jmZfD75mGnc7iEMi-6" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="410" y="340" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="6S32jmZfD75mGnc7iEMi-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;" parent="1" source="6S32jmZfD75mGnc7iEMi-2" target="6S32jmZfD75mGnc7iEMi-8" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="410" y="445" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="6S32jmZfD75mGnc7iEMi-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;" parent="1" source="6S32jmZfD75mGnc7iEMi-2" target="6S32jmZfD75mGnc7iEMi-13" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="6S32jmZfD75mGnc7iEMi-15" value="Develop the solution" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="870" y="125" width="170" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="6S32jmZfD75mGnc7iEMi-17" value="Create skeleton:&#xa;classes, method signatures,&#xa;TODOs, single responsibility.&#xa;Define inputs/outputs." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+          <mxGeometry x="860" y="270" width="220" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="6S32jmZfD75mGnc7iEMi-18" value="Add integration &amp; unit tests&#xa;covering all cases.&#xa;Run tests to verify setup." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+          <mxGeometry x="1100" y="270" width="220" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="6S32jmZfD75mGnc7iEMi-19" value="Implement each method&#xa;(max 8-10 lines).&#xa;Run static code analyzers&#xa;for quality." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+          <mxGeometry x="840" y="380" width="220" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="6S32jmZfD75mGnc7iEMi-24" value="Review code:&#xa;functionality, quality,&#xa;logic, time/space&#xa;optimization" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+          <mxGeometry x="1110" y="380" width="220" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="6S32jmZfD75mGnc7iEMi-20" value="Validate with tests.&#xa;Iterate to fix failures.&#xa;Ensure all tests pass." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+          <mxGeometry x="980" y="490" width="220" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="6S32jmZfD75mGnc7iEMi-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;" parent="1" source="6S32jmZfD75mGnc7iEMi-13" target="6S32jmZfD75mGnc7iEMi-15" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-dev-skel" style="edgeStyle=orthogonalEdgeStyle;rounded=0;" parent="1" source="6S32jmZfD75mGnc7iEMi-15" target="6S32jmZfD75mGnc7iEMi-17" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-skel-test" style="edgeStyle=orthogonalEdgeStyle;rounded=0;" parent="1" source="6S32jmZfD75mGnc7iEMi-17" target="6S32jmZfD75mGnc7iEMi-18" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-skel-impl" style="edgeStyle=orthogonalEdgeStyle;rounded=0;" parent="1" source="6S32jmZfD75mGnc7iEMi-17" target="6S32jmZfD75mGnc7iEMi-19" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-impl-review" style="edgeStyle=orthogonalEdgeStyle;rounded=0;" parent="1" source="6S32jmZfD75mGnc7iEMi-19" target="6S32jmZfD75mGnc7iEMi-24" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-review-val" style="edgeStyle=orthogonalEdgeStyle;rounded=0;" parent="1" source="6S32jmZfD75mGnc7iEMi-24" target="6S32jmZfD75mGnc7iEMi-20" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-test-val" style="edgeStyle=orthogonalEdgeStyle;rounded=0;jumpStyle=arc;" parent="1" source="6S32jmZfD75mGnc7iEMi-18" target="6S32jmZfD75mGnc7iEMi-20" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1090" y="320" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="6S32jmZfD75mGnc7iEMi-25" value="Create commit message.&#xa;Add Jira ID /&#xa;requirement traceability." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+          <mxGeometry x="1340" y="240" width="210" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="6S32jmZfD75mGnc7iEMi-21" value="Create Pull Request" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="1360" y="130" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="pr-checklist" value="PR Checklist:&#xa;- Tests passing&#xa;- Code reviewed&#xa;- Docs updated&#xa;- No linting errors" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+          <mxGeometry x="1340" y="360" width="210" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-val-commit" style="edgeStyle=orthogonalEdgeStyle;rounded=0;" parent="1" source="6S32jmZfD75mGnc7iEMi-20" target="6S32jmZfD75mGnc7iEMi-25" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1590" y="525" />
+              <mxPoint x="1590" y="275" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="6S32jmZfD75mGnc7iEMi-27" style="edgeStyle=orthogonalEdgeStyle;rounded=0;" parent="1" source="6S32jmZfD75mGnc7iEMi-21" target="6S32jmZfD75mGnc7iEMi-25" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-commit-checklist" style="edgeStyle=orthogonalEdgeStyle;rounded=0;" parent="1" source="6S32jmZfD75mGnc7iEMi-25" target="pr-checklist" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-val-pr" style="edgeStyle=orthogonalEdgeStyle;rounded=0;" parent="1" source="6S32jmZfD75mGnc7iEMi-20" target="6S32jmZfD75mGnc7iEMi-21" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1590" y="525" />
+              <mxPoint x="1590" y="180" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="deploy-merge" value="Merge PR &amp;&#xa;Trigger CI/CD Pipeline" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="1760" y="130" width="190" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="deploy-staging" value="Deploy to Staging.&#xa;Run smoke tests&#xa;&amp; integration tests." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
+          <mxGeometry x="1760" y="240" width="190" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="deploy-prod" value="Deploy to Production.&#xa;Tag release in Git.&#xa;Update changelog." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
+          <mxGeometry x="1760" y="360" width="190" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-pr-deploy" style="edgeStyle=orthogonalEdgeStyle;rounded=0;" parent="1" source="6S32jmZfD75mGnc7iEMi-21" target="deploy-merge" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-merge-staging" style="edgeStyle=orthogonalEdgeStyle;rounded=0;" parent="1" source="deploy-merge" target="deploy-staging" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-staging-prod" style="edgeStyle=orthogonalEdgeStyle;rounded=0;" parent="1" source="deploy-staging" target="deploy-prod" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="maint-monitor" value="Monitor Production&#xa;(errors, performance,&#xa;uptime, usage metrics)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="2060" y="130" width="200" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="maint-bugs" value="Capture Bug Reports&#xa;&amp; Incidents.&#xa;Classify severity." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+          <mxGeometry x="2060" y="260" width="200" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="maint-features" value="Capture Feature Requests&#xa;&amp; Enhancements.&#xa;User feedback loop." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+          <mxGeometry x="2060" y="380" width="200" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="maint-triage" value="Triage &amp; Prioritize&#xa;Maintenance Backlog.&#xa;Assign to sprints." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+          <mxGeometry x="2060" y="500" width="200" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="maint-hotfix" value="Hotfix Cycle&#xa;(emergency patches,&#xa;skip to deployment)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+          <mxGeometry x="1800" y="500" width="200" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="maint-deprecation" value="Dependency Updates,&#xa;Security patches,&#xa;Tech debt backlog" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+          <mxGeometry x="2060" y="620" width="200" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-prod-monitor" style="edgeStyle=orthogonalEdgeStyle;rounded=0;" parent="1" source="deploy-prod" target="maint-monitor" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2010" y="395" />
+              <mxPoint x="2010" y="165" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge-monitor-bugs" style="edgeStyle=orthogonalEdgeStyle;rounded=0;" parent="1" source="maint-monitor" target="maint-bugs" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-monitor-features" style="edgeStyle=orthogonalEdgeStyle;rounded=0;" parent="1" source="maint-monitor" target="maint-features" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2290" y="165" />
+              <mxPoint x="2290" y="415" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge-bugs-triage" style="edgeStyle=orthogonalEdgeStyle;rounded=0;" parent="1" source="maint-bugs" target="maint-triage" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2300" y="295" />
+              <mxPoint x="2300" y="535" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge-features-triage" style="edgeStyle=orthogonalEdgeStyle;rounded=0;" parent="1" source="maint-features" target="maint-triage" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-triage-dep" style="edgeStyle=orthogonalEdgeStyle;rounded=0;" parent="1" source="maint-triage" target="maint-deprecation" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-bugs-hotfix" style="edgeStyle=orthogonalEdgeStyle;rounded=0;" parent="1" source="maint-bugs" target="maint-hotfix" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2030" y="295" />
+              <mxPoint x="2030" y="535" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge-triage-back" value="New cycle" style="edgeStyle=orthogonalEdgeStyle;rounded=0;dashed=1;strokeColor=#FF0000;strokeWidth=2;fontStyle=1;fontSize=10;" parent="1" source="maint-triage" target="6S32jmZfD75mGnc7iEMi-10" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2040" y="535" />
+              <mxPoint x="2040" y="620" />
+              <mxPoint x="40" y="620" />
+              <mxPoint x="40" y="260" />
+            </Array>
+            <mxPoint x="2060" y="585.0000000000002" as="sourcePoint" />
+            <mxPoint x="100" y="240" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge-hotfix-deploy" value="Hotfix" style="edgeStyle=orthogonalEdgeStyle;rounded=0;dashed=1;strokeColor=#b85450;strokeWidth=2;" parent="1" source="maint-hotfix" target="deploy-prod" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="discovery-box" value="PROJECT DISCOVERY AGENT&#xa;Runs at session start:&#xa;• Scan codebase structure&#xa;• Detect tech stack&#xa;• Read project.yaml config&#xa;• Update config if changed&#xa;• Load domain context" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;fontStyle=1;fontSize=10;" parent="1" vertex="1">
+          <mxGeometry x="60" y="490" width="200" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-discovery-req" style="edgeStyle=orthogonalEdgeStyle;rounded=0;dashed=1;strokeColor=#666666;" parent="1" source="req-discovery" target="discovery-box" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

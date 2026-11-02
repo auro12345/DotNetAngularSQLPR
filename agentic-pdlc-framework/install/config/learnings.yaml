@@ -1,0 +1,183 @@
+# config/learnings.yaml
+#
+# Team-specific learnings that supplement and override framework defaults.
+# This file grows over time as the team runs retrospectives and captures insights.
+#
+# HOW TO UPDATE:
+#   /learn "description of what was learned"  — adds a single learning
+#   /retro                                     — runs a retrospective and proposes batch updates
+#   /health                                    — reports how well the team follows entries here
+#
+# HOW AGENTS USE THIS FILE:
+#   All agents load this after config/project.yaml.
+#   agentHints.*       → injected into the relevant agent's context
+#   patterns.avoid     → treated as BLOCKER in code review
+#   patterns.preferred → suggested in development and review
+#   reviewOverrides    → override default thresholds from project.yaml
+#   process.*          → change workflow behavior (skip steps, auto-modes)
+#   techDebt           → surfaced by Maintenance Agent
+#   postmortems        → context for Maintenance Agent and Review Agent
+#
+# IMPORTANT: Credentials never go here. Non-secret settings only.
+
+version: 1
+project: "your-project-name"   # matches config/project.yaml > project.name
+lastUpdated: null
+updatedBy: null
+
+# ─────────────────────────────────────────────────────────
+# CODE PATTERNS
+# Team-agreed conventions beyond framework defaults.
+# ─────────────────────────────────────────────────────────
+patterns:
+  preferred: []
+  # Example entries (remove # to activate):
+  #
+  # - pattern: "Use Result<T, E> instead of throwing exceptions in service layer"
+  #   reason: "Exceptions make control flow hard to test and trace"
+  #   appliesTo: ["services", "repositories"]
+  #   addedDate: "2025-01-15"
+  #   source: "retro-2025-Q1"
+  #
+  # - pattern: "All API responses must use the ApiResponse<T> wrapper type"
+  #   reason: "Inconsistent response shapes caused 2 frontend bugs in Q4 2024"
+  #   appliesTo: ["controllers", "api handlers"]
+  #   addedDate: "2025-01-15"
+  #   source: "postmortem-PM-001"
+
+  avoid: []
+  # Example entries:
+  #
+  # - pattern: "Never use `any` in TypeScript, including test files"
+  #   reason: "Masked a type mismatch that caused a P1 incident (PM-002)"
+  #   severity: blocker    # blocker | warning | suggestion
+  #   addedDate: "2025-01-15"
+  #   source: "postmortem-PM-002"
+  #
+  # - pattern: "Don't call Prisma directly from controllers — go through service layer"
+  #   reason: "Bypassing service layer skips auth checks and validation"
+  #   severity: blocker
+  #   addedDate: "2025-01-15"
+  #   source: "retro-2025-Q1"
+
+# ─────────────────────────────────────────────────────────
+# REVIEW OVERRIDES
+# Adjust default code review thresholds for this project.
+# Values here override config/project.yaml > codingStandards.*
+# ─────────────────────────────────────────────────────────
+reviewOverrides:
+  # maxFunctionLines: 15          # relax from default 10 for this team
+  # maxFileLines: 400             # relax from default 300
+  # coverageThresholds:
+  #   statements: 75              # relax from default 80 for legacy areas
+
+  skipForPaths: []
+  # Paths where normal review rules are relaxed:
+  # - "migrations/**"             # DB migrations can be longer
+  # - "**/*.generated.ts"         # generated files exempt from style rules
+  # - "scripts/**"                # one-off scripts exempt from coverage
+
+  extraSecurityPaths: []
+  # Paths that always trigger a deeper security check:
+  # - "src/payments/**"
+  # - "src/auth/**"
+
+# ─────────────────────────────────────────────────────────
+# AGENT HINTS
+# Additional context injected into specific agents.
+# Use these to give agents knowledge that isn't in the code.
+# ─────────────────────────────────────────────────────────
+agentHints:
+  requirements: []
+  # - "This project's Jira ACs are often incomplete — always check linked Confluence
+  #    pages for the full spec before declaring requirements done"
+  # - "Design team creates Figma prototypes before tickets are marked Ready —
+  #    check for Figma links even when the ticket description doesn't mention them"
+
+  development: []
+  # - "Run `npm run db:seed` before running integration tests locally"
+  # - "The OrderRepository.findByStatus() has a known bug (PROJ-456) — avoid it
+  #    until that ticket is resolved; use findByStatusRaw() as a workaround"
+
+  review: []
+  # - "Any change to src/payments/** needs an explicit note confirming PCI scope
+  #    was considered — add this as a PR comment"
+  # - "Database migrations must always be backwards-compatible; we use blue-green
+  #    deploys and two versions of the app run simultaneously during rollout"
+
+  testing: []
+  # - "Prefer Playwright E2E for the checkout flow — unit tests have historically
+  #    missed integration issues between cart and payment modules"
+  # - "Use the `createAuthenticatedClient()` factory for all auth-related tests;
+  #    don't construct tokens manually"
+
+  architecture: []
+  # - "New modules must follow the feature-folder structure in src/features/;
+  #    do not create top-level service files outside feature folders"
+
+  maintenance: []
+  # - "The weekly dependency audit should skip @internal/* packages — they are
+  #    vendored and managed separately by the platform team"
+
+# ─────────────────────────────────────────────────────────
+# PROCESS ADJUSTMENTS
+# Change how the PDLC workflow runs for this project.
+# ─────────────────────────────────────────────────────────
+process:
+  # Skip design doc for these ticket types (just go straight to implementation):
+  skipDesignDocForTypes: []        # e.g., ["bug", "chore"]
+
+  # Auto-autonomous mode (skip Jira clarification loop) for these Jira labels:
+  autonomousOnLabels: []           # e.g., ["hotfix", "p0", "trivial"]
+
+  # Skip code review for these file path patterns:
+  skipReviewForPaths: []           # e.g., ["docs/**", "*.md", "*.txt"]
+
+  # Always post Confluence release notes on merge (overrides per-ticket setting):
+  alwaysPostReleaseNotes: false
+
+  # Require a second human reviewer (on top of AI review) for these paths:
+  requireHumanReviewForPaths: []   # e.g., ["src/payments/**", "src/auth/**"]
+
+# ─────────────────────────────────────────────────────────
+# TECH DEBT REGISTER
+# Known issues the team is tracking.
+# Read by the Maintenance Agent and surfaced in /health reports.
+# ─────────────────────────────────────────────────────────
+techDebt: []
+# Example entries:
+#
+# - id: "TD-001"
+#   description: "UserService has grown to 400 lines and handles too many concerns"
+#   file: "src/users/user.service.ts"
+#   severity: warning       # warning | critical
+#   ticketRef: "PROJ-789"
+#   addedDate: "2025-01-15"
+#   addedBy: "retro-2025-Q1"
+#
+# - id: "TD-002"
+#   description: "No integration tests for the notification module"
+#   file: "src/notifications/**"
+#   severity: critical
+#   ticketRef: null
+#   addedDate: "2025-01-15"
+#   addedBy: "learn"
+
+# ─────────────────────────────────────────────────────────
+# POSTMORTEM LEARNINGS
+# Documented incidents and the rules they produced.
+# Referenced by Maintenance and Review agents for context.
+# ─────────────────────────────────────────────────────────
+postmortems: []
+# Example entries:
+#
+# - id: "PM-001"
+#   date: "2025-01-10"
+#   incident: "P1 — Auth failure after JWT secret rotation"
+#   rootCause: "JWT secret rotated in auth service without updating dependent services"
+#   impact: "30 min downtime, ~200 users affected"
+#   learning: "Before deploying auth changes, verify all services consuming JWT are
+#              updated in the same deployment window"
+#   rulesAdded:
+#     - "review: flag any change to JWT secret handling for cross-service impact check"
+#   ticketRef: "PROJ-INCIDENT-001"

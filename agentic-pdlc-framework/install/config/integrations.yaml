@@ -1,0 +1,255 @@
+# PDLC Integrations Configuration
+# ─────────────────────────────────────────────────────────────────────────────
+# This is the SINGLE SOURCE OF TRUTH for all external tool connections.
+#
+# ✅  URLs, IDs, space keys, page IDs, settings    → live here
+# ❌  API tokens, passwords, secrets               → live in .env (see .env.example)
+#
+# HOW TO SET UP:
+#   1. Copy this file to your project: cp config/integrations.yaml <your-project>/config/
+#   2. Fill in the fields for the tools you use (set enabled: false for unused ones)
+#   3. Copy .env.example to .env and fill in the credentials
+#   4. Run /setup in Claude Code to validate all connections
+#   5. Run /scan to wire these settings into config/project.yaml
+#
+# REFERENCED BY:
+#   - config/project.yaml  (imports integrations section)
+#   - .claude/settings.json  (MCP server env vars)
+#   - All agents (read via config/project.yaml > integrations)
+# ─────────────────────────────────────────────────────────────────────────────
+
+version: "1.0"
+
+# ──────────────────────────────────────────────────────────────────────────────
+# SOURCE CONTROL
+# ──────────────────────────────────────────────────────────────────────────────
+sourceControl:
+  # Which provider is active? One of: github | gitlab | bitbucket | azure-devops
+  provider: github
+
+  github:
+    enabled: true
+    owner: "TODO: your-org-or-username"     # Organization or username
+    repo: "TODO: your-repository"           # Repository name (no URL, just slug)
+    defaultBranch: main                     # main | master | develop
+    mergeStrategy: squash                   # squash | rebase | merge
+    requireLinearHistory: true
+    requireSignedCommits: false
+    prTemplate: null                        # Path to PR template file, null = use PDLC default
+    # Required env var: GITHUB_PERSONAL_ACCESS_TOKEN
+    # Scopes needed: repo, read:org, workflow
+
+  gitlab:
+    enabled: false
+    projectId: null                         # Integer project ID (from project settings)
+    namespace: "TODO: group/project"        # e.g., my-org/my-repo
+    apiUrl: "https://gitlab.com/api/v4"    # Override for self-hosted GitLab
+    defaultBranch: main
+    mergeStrategy: squash
+    # Required env var: GITLAB_PERSONAL_ACCESS_TOKEN
+
+  bitbucket:
+    enabled: false
+    workspace: "TODO: your-workspace"       # Bitbucket workspace slug
+    repo: "TODO: your-repository"           # Repository slug
+    defaultBranch: main
+    # Required env var: BITBUCKET_TOKEN, BITBUCKET_USERNAME
+
+  azureDevOps:
+    enabled: false
+    organization: "TODO: your-org"
+    project: "TODO: your-project"
+    repo: "TODO: your-repo"
+    # Required env var: AZURE_DEVOPS_TOKEN
+
+# ──────────────────────────────────────────────────────────────────────────────
+# ISSUE TRACKING
+# ──────────────────────────────────────────────────────────────────────────────
+issueTracking:
+  # Which provider is active? One of: jira | github-issues | linear | azure-devops | none
+  provider: jira
+
+  jira:
+    enabled: true
+    baseUrl: "TODO: https://your-org.atlassian.net"
+    projectKey: "TODO: PROJ"               # e.g., PROJ, WEB, API
+    boardId: null                           # Sprint board ID (optional)
+
+    # Status transition IDs — get them with:
+    # curl -H "Authorization: Basic $(echo -n $JIRA_USER_EMAIL:$JIRA_API_TOKEN | base64)" \
+    #   "$JIRA_BASE_URL/rest/api/3/issue/PROJ-1/transitions" | jq '.transitions[] | {id, name}'
+    transitions:
+      toDo: null
+      inProgress: null
+      inReview: null
+      done: null
+      blocked: null
+
+    # Custom field IDs (Jira custom fields vary per instance)
+    # Get yours: curl .../rest/api/3/field | jq '.[] | select(.custom) | {id, name}'
+    customFields:
+      acceptanceCriteria: null    # e.g., "customfield_10016"
+      storyPoints: null           # e.g., "customfield_10028"
+      epicLink: null              # e.g., "customfield_10014"
+      sprintField: null           # e.g., "customfield_10020"
+
+    # Required env vars: JIRA_API_TOKEN, JIRA_USER_EMAIL
+
+  githubIssues:
+    enabled: false
+    # Uses sourceControl.github settings (same credentials)
+
+  linear:
+    enabled: false
+    teamId: "TODO: your-team-id"            # From Linear workspace settings
+    # Required env var: LINEAR_API_KEY
+
+# ──────────────────────────────────────────────────────────────────────────────
+# DESIGN TOOLS
+# Used by Requirements Agent to extract visual specs from design links in tickets
+# ──────────────────────────────────────────────────────────────────────────────
+design:
+  figma:
+    enabled: false
+    teamId: null                            # From figma.com/files/{teamId} URL (optional)
+    defaultFileKey: null                    # Default file key if not in ticket link (optional)
+
+    # What to extract when a Figma link is found in a ticket:
+    extract:
+      componentList: true         # List all components in the frame
+      textContent: true           # All text strings (labels, placeholders, errors)
+      colorTokens: true           # Color styles used in the frame
+      typographyTokens: true      # Font families, sizes, weights
+      spacingValues: true         # Margin, padding, gap values
+      prototypeFlows: true        # Click targets, navigation flows
+      designAnnotations: true     # Comments/notes from designers on the frame
+      exportFrame: true           # Export the frame as an image for visual reference
+      variants: true              # Component states (hover, active, disabled, loading, error)
+
+    # Required env var: FIGMA_ACCESS_TOKEN
+    # Get token: figma.com/settings → Personal access tokens → Create token
+
+  zeplin:
+    enabled: false
+    workspace: null
+    # Required env var: ZEPLIN_ACCESS_TOKEN
+
+  adobeXd:
+    enabled: false
+    # XD files accessed via shared URLs only (no API auth needed for public links)
+
+# ──────────────────────────────────────────────────────────────────────────────
+# DOCUMENTATION PLATFORMS
+# ──────────────────────────────────────────────────────────────────────────────
+documentation:
+  confluence:
+    enabled: false
+    baseUrl: "TODO: https://your-org.atlassian.net/wiki"
+    spaceKey: "TODO: PROJ"                 # Your Confluence project space key
+
+    # Page IDs for PDLC-managed pages
+    # Get page ID: open page → ••• → Page Information → ID in URL
+    pages:
+      releaseNotesParent: null             # Parent page under which releases are created
+      designDocsParent: null               # Parent page for architecture/design docs
+      apiDocsParent: null                  # Parent page for API reference docs
+      healthDashboard: null                # Page ID for the health dashboard
+      adrParent: null                      # Parent page for Architecture Decision Records
+      runbooksParent: null                 # Parent page for operational runbooks
+
+    # Required env vars: CONFLUENCE_API_TOKEN, CONFLUENCE_USER_EMAIL
+    # (same Atlassian account as Jira — usually same token)
+
+  notion:
+    enabled: false
+    databaseId: null                       # Notion database ID for project docs
+    # Required env var: NOTION_API_KEY
+
+# ──────────────────────────────────────────────────────────────────────────────
+# EXTERNAL SOURCE FETCHING
+# Controls how the Requirements Agent handles links and attachments in tickets
+# ──────────────────────────────────────────────────────────────────────────────
+externalSources:
+  # When a Jira ticket contains links or attachments, fetch and analyze them?
+  fetchLinkedUrls: true                   # Fetch URLs found in ticket description/links
+
+  # URL routing — which tool handles which domain
+  urlRouting:
+    figma.com: figma                      # Route to Figma MCP
+    atlassian.net/wiki: confluence        # Route to Confluence MCP
+    atlassian.net: confluence             # Confluence cloud
+    github.com: github                    # Route to GitHub MCP
+    gitlab.com: gitlab                    # Route to GitLab MCP
+    # Everything else → general HTTP fetch
+
+  # Attachment handling
+  attachments:
+    images: true             # Describe image content visually (wireframes, screenshots)
+    pdfs: true               # Extract text from PDF attachments
+    markdownFiles: true      # Read markdown/text files
+    officeFiles: false       # Word/Excel/PowerPoint (requires conversion, disabled by default)
+    maxSizeMb: 10            # Skip attachments larger than this
+
+# ──────────────────────────────────────────────────────────────────────────────
+# NOTIFICATIONS
+# ──────────────────────────────────────────────────────────────────────────────
+notifications:
+  slack:
+    enabled: false
+    teamId: "TODO: T0XXXXXXXXX"            # Found in workspace URL or auth.test API
+    channels:
+      deployments: null                    # Channel ID for deployment notifications (e.g., C0XXXXXXXXX)
+      alerts: null                         # Channel ID for security/health alerts
+      releases: null                       # Channel ID for release announcements
+    # Required env vars: SLACK_BOT_TOKEN
+    # Bot scopes needed: chat:write, channels:read
+
+  microsoftTeams:
+    enabled: false
+    webhookUrl: null                       # Incoming webhook URL from Teams connector
+    # No additional env vars — webhook URL contains auth
+
+# ──────────────────────────────────────────────────────────────────────────────
+# MONITORING & OBSERVABILITY
+# ──────────────────────────────────────────────────────────────────────────────
+monitoring:
+  provider: null                          # sentry | datadog | newrelic | grafana | cloudwatch | none
+
+  sentry:
+    enabled: false
+    dsn: null                             # Project DSN (non-secret, safe to commit)
+    projectSlug: null
+    orgSlug: null
+    dashboardUrl: null
+    # Required env var: SENTRY_AUTH_TOKEN (for API access)
+
+  datadog:
+    enabled: false
+    site: "datadoghq.com"                # datadoghq.com | datadoghq.eu
+    dashboardUrl: null
+    # Required env var: DD_API_KEY, DD_APP_KEY
+
+  newRelic:
+    enabled: false
+    accountId: null
+    dashboardUrl: null
+    # Required env var: NEW_RELIC_API_KEY
+
+  grafana:
+    enabled: false
+    baseUrl: null                          # e.g., https://your-org.grafana.net
+    dashboardUrl: null
+    # Required env var: GRAFANA_API_TOKEN
+
+# ──────────────────────────────────────────────────────────────────────────────
+# CI/CD
+# (Usually auto-detected by Project Discovery Agent — override here if needed)
+# ──────────────────────────────────────────────────────────────────────────────
+ciCd:
+  provider: null                          # auto-detected | github-actions | gitlab-ci | jenkins | circleci
+  # Provider-specific config only needed if not auto-detected or using self-hosted runners
+
+  jenkins:
+    enabled: false
+    baseUrl: null                          # e.g., https://jenkins.your-company.com
+    # Required env var: JENKINS_TOKEN, JENKINS_USER

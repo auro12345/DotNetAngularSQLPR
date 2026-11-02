@@ -1,0 +1,55 @@
+{
+  "recommendations": [
+    // AI assistants
+    "GitHub.copilot",
+    "GitHub.copilot-chat",
+    "Continue.continue",
+
+    // Git
+    "eamodio.gitlens",
+    "mhutchie.git-graph",
+
+    // TypeScript / JavaScript
+    "ms-vscode.vscode-typescript-next",
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+
+    // Python
+    "ms-python.python",
+    "ms-python.black-formatter",
+    "charliermarsh.ruff",
+
+    // Java
+    "vscjava.vscode-java-pack",
+
+    // Go
+    "golang.go",
+
+    // Rust
+    "rust-lang.rust-analyzer",
+
+    // YAML / TOML / JSON
+    "redhat.vscode-yaml",
+    "tamasfe.even-better-toml",
+
+    // Markdown / Diagrams
+    "yzhang.markdown-all-in-one",
+    "bierner.markdown-mermaid",
+    "hediet.vscode-drawio",
+
+    // Tailwind / Prisma (common in TS stacks)
+    "bradlc.vscode-tailwindcss",
+    "Prisma.prisma",
+
+    // Docker / DevContainers
+    "ms-azuretools.vscode-docker",
+    "ms-vscode-remote.remote-containers",
+
+    // REST / HTTP testing
+    "humao.rest-client",
+
+    // Code quality
+    "streetsidesoftware.code-spell-checker",
+    "christian-kohler.path-intellisense"
+  ]
+}

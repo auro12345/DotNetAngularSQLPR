@@ -1,0 +1,92 @@
+---
+description: Project Discovery — runs at the start of every AI session or when the agent first opens a project. Scans the codebase to detect tech stack, update project config, and load domain context before any task begins.
+globs:
+alwaysApply: true
+---
+
+# Project Discovery Rule
+
+## Trigger
+This rule activates **automatically at the start of every session** and whenever the agent is assigned a new task in a project.
+
+## Mandatory First Steps
+
+Before doing any task, the agent MUST:
+
+1. **Check for project config**
+   - Look for `config/project.yaml` at the project root
+   - If missing, run the Project Discovery scan and create it
+   - If present, read it to load context
+
+2. **Scan the project structure**
+   - Identify root files: `package.json`, `pom.xml`, `build.gradle`, `Cargo.toml`, `requirements.txt`, `pyproject.toml`, `go.mod`, `*.csproj`, `Gemfile`, `composer.json`
+   - Identify framework markers: `next.config.*`, `vite.config.*`, `angular.json`, `vue.config.*`, `.django`, `spring-boot`, `rails`, etc.
+   - Identify language from file extensions and config files
+   - Identify test framework from devDependencies / test config files
+   - Identify CI/CD from `.github/workflows/`, `.gitlab-ci.yml`, `Jenkinsfile`, etc.
+   - Identify linting/formatting: `.eslintrc*`, `.prettierrc*`, `pylint`, `ruff`, `clippy`, etc.
+
+3. **Detect and record the following in project.yaml**
+   ```
+   - domain: (e.g., e-commerce, fintech, healthcare, internal-tooling)
+   - primaryLanguage: (e.g., TypeScript, Python, Java)
+   - framework: (e.g., React, Next.js, Spring Boot, FastAPI)
+   - packageManager: (e.g., npm, pnpm, yarn, pip, maven, gradle)
+   - testFramework: (e.g., Jest, Pytest, JUnit, Vitest)
+   - linter: (e.g., ESLint, Pylint, Checkstyle)
+   - formatter: (e.g., Prettier, Black, Google Java Format)
+   - ciCd: (e.g., GitHub Actions, Jenkins, GitLab CI)
+   - deployTarget: (e.g., AWS, GCP, Azure, Vercel, self-hosted)
+   - repositoryType: (e.g., monorepo, multi-repo, single-service)
+   - issueTracker: (e.g., Jira, GitHub Issues, Linear)
+   - databases: (e.g., PostgreSQL, MongoDB, Redis)
+   - apiStyle: (e.g., REST, GraphQL, gRPC, tRPC)
+   ```
+
+4. **Update project.yaml if stale**
+   - If a new dependency or framework is detected that isn't in config, add it
+   - Preserve human-authored fields (project name, description, business domain)
+
+5. **Print a brief discovery summary** before starting work:
+   ```
+   Project: [name]
+   Stack: [language] / [framework]
+   Tests: [framework]  CI: [ciCd]
+   Config: [loaded from path]
+   ```
+
+## Behavior Rules
+
+- Never skip discovery on first use of a project
+- If config/project.yaml does not exist, create it using the template at `agentic-pdlc-framework/config/project.template.yaml`
+- If a field cannot be auto-detected, set it to `"unknown"` and add a `TODO` comment
+- Do NOT modify user-authored description or domain fields unless explicitly asked
+- After discovery, all subsequent agent actions use the loaded context
+
+## Ticket Work Routing (After Discovery)
+
+After printing the discovery summary, if the user's request contains a ticket ID (pattern: `[A-Z]+-\d+`), route the work through the full PDLC pipeline — never jump to implementation.
+
+**Determine the task type and route accordingly:**
+
+| Request pattern | Route to |
+|----------------|---------|
+| "work on TICKET", "start TICKET", "implement TICKET" | Full pipeline: requirements → design → branch → code → review → PR |
+| "fix TICKET", "bug TICKET" | Bug fix pipeline: requirements (read bug) → design (root cause) → branch → regression test → fix → review → PR |
+| "requirements for TICKET" | Requirements phase only |
+| "design for TICKET" | Design phase only (check requirements doc exists first) |
+| "review" / "create PR" | Review/PR phase only |
+
+**After discovery, announce the pipeline to the user:**
+```
+✅ Discovery complete: [one-line stack summary]
+
+Starting PDLC pipeline for [TICKET-ID]:
+→ Phase 1: Requirements (fetching ticket + sources)
+→ Phase 2: Design (after requirements confirmed)
+→ Phase 3: Branch + Skeleton + Tests + Implementation
+→ Phase 4: Review
+→ Phase 5: Pull Request
+```
+
+Do NOT silently skip to implementation after discovery.

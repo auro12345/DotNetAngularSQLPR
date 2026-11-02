@@ -1,0 +1,86 @@
+---
+description: Analysis and design phase — governs how agents design solutions, create diagrams, validate approaches, and produce design artifacts before writing any code.
+globs:
+alwaysApply: false
+---
+
+# Analysis & Design Rule
+
+## When This Applies
+After requirements are clear, before writing any implementation code.
+
+## Design Process
+
+### Step 1: Solution Approach
+The agent MUST produce a written design that includes:
+
+```markdown
+## Approach
+[2-3 sentence summary of the chosen approach and why]
+
+## Key Design Decisions
+- [Decision 1]: [rationale]
+- [Decision 2]: [rationale]
+
+## Alternatives Considered
+- [Alternative]: [reason rejected]
+
+## Impact Analysis
+- Files to create: [list]
+- Files to modify: [list]
+- Database changes: [migrations needed?]
+- API changes: [breaking? additive?]
+- Dependencies to add: [packages]
+```
+
+### Step 2: Diagrams (create when complexity warrants)
+Use Mermaid syntax for diagrams embedded in markdown:
+
+**Sequence diagram** — for API calls, service interactions, async flows:
+```mermaid
+sequenceDiagram
+  Client->>API: POST /login
+  API->>AuthService: validate(credentials)
+  AuthService-->>API: token
+  API-->>Client: 200 {token}
+```
+
+**Flowchart** — for decision trees, complex logic:
+```mermaid
+flowchart TD
+  A[Start] --> B{Valid input?}
+  B -- Yes --> C[Process]
+  B -- No --> D[Return error]
+```
+
+**Component diagram** — for architectural decisions:
+```mermaid
+graph LR
+  UI --> API
+  API --> DB
+  API --> Cache
+```
+
+### Step 3: Validation Checklist
+Before proceeding to implementation, verify:
+- [ ] Approach aligns with existing architecture patterns (check `config/project.yaml` `patterns`)
+- [ ] No unnecessary new dependencies introduced
+- [ ] Security implications considered (auth, input validation, data exposure)
+- [ ] Performance implications noted (N+1 queries, caching opportunities)
+- [ ] Backwards compatibility maintained (or breaking changes documented)
+- [ ] Approach reviewed against original requirement
+
+## Design Constraints
+
+Apply these constraints from `project.yaml` during design:
+- `codingStandards.maxFunctionLines` — plan functions accordingly
+- `codingStandards.patterns` — follow established patterns
+- `tech.apiStyle` — stay consistent with existing API style
+- `tech.databases` — use existing data stores
+
+## Anti-patterns to Avoid
+
+- Over-engineering: don't design for hypothetical future requirements
+- Premature abstraction: 3 similar things before extracting a pattern
+- Gold-plating: don't add unrequested features
+- Monolithic methods: each function should do one thing

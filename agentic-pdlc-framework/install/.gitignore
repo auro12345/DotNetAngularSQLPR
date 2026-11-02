@@ -1,0 +1,86 @@
+# Credentials — never commit
+.env
+.env.local
+.env.*.local
+
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build output
+dist/
+build/
+out/
+.next/
+.nuxt/
+.svelte-kit/
+.vite/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+*.egg-info/
+.eggs/
+dist/
+*.dist-info/
+htmlcov/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Java / Maven / Gradle
+target/
+.gradle/
+*.class
+*.jar
+*.war
+*.ear
+build/
+
+# Go
+*.exe
+*.exe~
+*.test
+*.out
+
+# Rust
+target/
+Cargo.lock   # keep for binaries, remove this line for libraries
+
+# Coverage reports
+coverage/
+*.lcov
+.nyc_output/
+
+# IDE files
+.idea/
+*.iml
+.vscode/*.log
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Runtime / temp
+*.pid
+*.seed
+*.pid.lock
+.cache/
+tmp/
+temp/
+
+# PDLC generated artifacts (optional — remove if you want to commit designs)
+docs/designs/*.md
